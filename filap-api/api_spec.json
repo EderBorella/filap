@@ -1,0 +1,990 @@
+{
+  "basePath": "",
+  "consumes": [
+    "application/json"
+  ],
+  "definitions": {},
+  "host": "localhost:5000",
+  "info": {
+    "contact": {
+      "name": "Filap API Support"
+    },
+    "description": "A minimal live Q&A API for hosts and audiences",
+    "termsOfService": "",
+    "title": "Filap API",
+    "version": "1.0.0"
+  },
+  "operationId": "getmyData",
+  "paths": {
+    "/api/messages/{message_id}/upvote": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Message identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "message_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "User token for vote tracking",
+            "format": "uuid",
+            "in": "header",
+            "name": "X-User-Token",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Upvote cast successfully",
+            "schema": {
+              "properties": {
+                "author_name": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "is_read": {
+                  "type": "boolean"
+                },
+                "queue_id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "user_token": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "vote_count": {
+                  "description": "Updated vote count",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "User token required",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Message not found or already voted",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Cast an upvote for a message",
+        "tags": [
+          "Voting"
+        ]
+      }
+    },
+    "/api/queues": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "properties": {
+                "default_sort_order": {
+                  "default": "votes",
+                  "description": "Default sorting order for messages",
+                  "enum": [
+                    "votes",
+                    "newest"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Optional queue name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Queue created successfully",
+            "schema": {
+              "properties": {
+                "created_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "default_sort_order": {
+                  "type": "string"
+                },
+                "expires_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "host_secret": {
+                  "description": "Host authentication secret",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Unique queue identifier",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Queue name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Create a new queue",
+        "tags": [
+          "Queues"
+        ]
+      }
+    },
+    "/api/queues/{queue_id}": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queue metadata",
+            "schema": {
+              "properties": {
+                "default_sort_order": {
+                  "description": "Default sorting order",
+                  "enum": [
+                    "votes",
+                    "newest"
+                  ],
+                  "type": "string"
+                },
+                "expires_at": {
+                  "description": "Queue expiration time",
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "id": {
+                  "description": "Queue identifier",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Queue name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Queue not found or expired",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Get queue metadata and settings",
+        "tags": [
+          "Queues"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Host authentication secret",
+            "format": "uuid",
+            "in": "header",
+            "name": "X-Queue-Secret",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "properties": {
+                "default_sort_order": {
+                  "description": "Default sorting order for messages",
+                  "enum": [
+                    "votes",
+                    "newest"
+                  ],
+                  "type": "string"
+                },
+                "name": {
+                  "description": "Updated queue name",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Queue updated successfully",
+            "schema": {
+              "properties": {
+                "default_sort_order": {
+                  "type": "string"
+                },
+                "expires_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Missing host secret",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "403": {
+            "description": "Invalid host credentials",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Queue not found",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "HostSecret": []
+          }
+        ],
+        "summary": "Update queue settings (host only)",
+        "tags": [
+          "Queues"
+        ]
+      }
+    },
+    "/api/queues/{queue_id}/events": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "produces": [
+          "text/event-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "SSE stream for real-time updates",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "default": "*",
+                "type": "string"
+              },
+              "Cache-Control": {
+                "default": "no-cache",
+                "type": "string"
+              },
+              "Connection": {
+                "default": "keep-alive",
+                "type": "string"
+              }
+            },
+            "schema": {
+              "description": "Event stream with messages like new_message, message_updated, message_deleted, queue_updated",
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "Queue not found or expired",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Server-Sent Events endpoint for real-time updates",
+        "tags": [
+          "Real-time Events"
+        ]
+      }
+    },
+    "/api/queues/{queue_id}/messages": {
+      "get": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Sort order (overrides queue default)",
+            "enum": [
+              "votes",
+              "newest"
+            ],
+            "in": "query",
+            "name": "sort",
+            "type": "string"
+          },
+          {
+            "default": 50,
+            "description": "Number of messages to return",
+            "in": "query",
+            "maximum": 100,
+            "minimum": 1,
+            "name": "limit",
+            "type": "integer"
+          },
+          {
+            "default": 0,
+            "description": "Number of messages to skip for pagination",
+            "in": "query",
+            "minimum": 0,
+            "name": "offset",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages retrieved successfully",
+            "schema": {
+              "properties": {
+                "limit": {
+                  "description": "Applied limit",
+                  "type": "integer"
+                },
+                "messages": {
+                  "items": {
+                    "properties": {
+                      "author_name": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "is_read": {
+                        "type": "boolean"
+                      },
+                      "queue_id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "text": {
+                        "type": "string"
+                      },
+                      "updated_at": {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "user_token": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "vote_count": {
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "offset": {
+                  "description": "Applied offset",
+                  "type": "integer"
+                },
+                "sort_by": {
+                  "description": "Applied sort order",
+                  "type": "string"
+                },
+                "total_count": {
+                  "description": "Total number of messages in queue",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Queue not found or expired",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Retrieve messages for a queue with pagination and sorting",
+        "tags": [
+          "Messages"
+        ]
+      },
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "author_name": {
+                  "description": "Optional author name (max 100 characters)",
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "text": {
+                  "description": "Message content (1-2000 characters)",
+                  "maxLength": 2000,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "user_token": {
+                  "description": "User token for identification",
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "text",
+                "user_token"
+              ],
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Message created successfully",
+            "schema": {
+              "properties": {
+                "author_name": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "is_read": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "queue_id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "user_token": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "vote_count": {
+                  "default": 0,
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Queue not found or expired",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Submit a new question/message to a queue",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/queues/{queue_id}/messages/{message_id}": {
+      "delete": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Message identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "message_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Host authentication secret",
+            "format": "uuid",
+            "in": "header",
+            "name": "X-Queue-Secret",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Message deleted successfully"
+          },
+          "401": {
+            "description": "Host authentication required",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Unauthorized or message not found",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "HostSecret": []
+          }
+        ],
+        "summary": "Delete a message (host only)",
+        "tags": [
+          "Messages"
+        ]
+      },
+      "patch": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Message identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "message_id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "description": "Host authentication secret (for host access)",
+            "format": "uuid",
+            "in": "header",
+            "name": "X-Queue-Secret",
+            "type": "string"
+          },
+          {
+            "description": "User token (for author access)",
+            "format": "uuid",
+            "in": "header",
+            "name": "X-User-Token",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "is_read": {
+                  "description": "Mark message as read/unread",
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message updated successfully",
+            "schema": {
+              "properties": {
+                "author_name": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "is_read": {
+                  "type": "boolean"
+                },
+                "queue_id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "updated_at": {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "user_token": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "vote_count": {
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "401": {
+            "description": "Authentication required",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Unauthorized or message not found",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "security": [
+          {
+            "HostSecret": []
+          },
+          {
+            "UserToken": []
+          }
+        ],
+        "summary": "Update a message (host or author)",
+        "tags": [
+          "Messages"
+        ]
+      }
+    },
+    "/api/queues/{queue_id}/user-token": {
+      "post": {
+        "parameters": [
+          {
+            "description": "Queue identifier",
+            "format": "uuid",
+            "in": "path",
+            "name": "queue_id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User token generated successfully",
+            "schema": {
+              "properties": {
+                "expires_at": {
+                  "description": "Token expiration time",
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "queue_id": {
+                  "description": "Queue identifier",
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "user_token": {
+                  "description": "Generated user token",
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Queue not found or expired",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          }
+        },
+        "summary": "Generate a user token for a queue",
+        "tags": [
+          "User Tokens"
+        ]
+      }
+    }
+  },
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "HostSecret": {
+      "in": "header",
+      "name": "X-Queue-Secret",
+      "type": "apiKey"
+    },
+    "UserToken": {
+      "in": "header",
+      "name": "X-User-Token",
+      "type": "apiKey"
+    }
+  },
+  "swagger": "2.0"
+}

@@ -10,18 +10,58 @@ queues_bp = Blueprint('queues', __name__)
 
 @queues_bp.route('/api/queues', methods=['POST'])
 def create_queue():
-    """
-    Create a new queue
-    
-    Request Body:
-    {
-        "name": "Optional Queue Name",
-        "default_sort_order": "newest" | "votes"
-    }
-    
-    Returns:
-        201: Queue created successfully with full queue object including host_secret
-        400: Invalid request data
+    """Create a new queue
+    ---
+    tags:
+      - Queues
+    consumes:
+      - application/json
+    parameters:
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Optional queue name
+            default_sort_order:
+              type: string
+              enum: [votes, newest]
+              default: votes
+              description: Default sorting order for messages
+    responses:
+      201:
+        description: Queue created successfully
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Unique queue identifier
+            name:
+              type: string
+              description: Queue name
+            host_secret:
+              type: string
+              format: uuid
+              description: Host authentication secret
+            created_at:
+              type: string
+              format: date-time
+            expires_at:
+              type: string
+              format: date-time
+            default_sort_order:
+              type: string
+      400:
+        description: Invalid request data
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
     """
     try:
         data = request.get_json() or {}
@@ -59,12 +99,45 @@ def create_queue():
 
 @queues_bp.route('/api/queues/<queue_id>', methods=['GET'])
 def get_queue(queue_id: str):
-    """
-    Get queue metadata and settings
-    
-    Returns:
-        200: Queue data (public information only)
-        404: Queue not found or expired
+    """Get queue metadata and settings
+    ---
+    tags:
+      - Queues
+    parameters:
+      - in: path
+        name: queue_id
+        type: string
+        format: uuid
+        required: true
+        description: Queue identifier
+    responses:
+      200:
+        description: Queue metadata
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: Queue identifier
+            name:
+              type: string
+              description: Queue name
+            default_sort_order:
+              type: string
+              enum: [votes, newest]
+              description: Default sorting order
+            expires_at:
+              type: string
+              format: date-time
+              description: Queue expiration time
+      404:
+        description: Queue not found or expired
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
     """
     try:
         queue_data = QueueService.get_queue(queue_id)
@@ -81,24 +154,81 @@ def get_queue(queue_id: str):
 @queues_bp.route('/api/queues/<queue_id>', methods=['PATCH'])
 @require_host_auth
 def update_queue(queue_id: str, host_secret: str):
-    """
-    Update queue settings (host only)
-    
-    Headers:
-        X-Queue-Secret: Host authentication secret
-    
-    Request Body:
-    {
-        "name": "Updated Queue Name",
-        "default_sort_order": "newest" | "votes"
-    }
-    
-    Returns:
-        200: Queue updated successfully
-        400: Invalid request data
-        401: Missing host secret
-        403: Invalid host credentials
-        404: Queue not found
+    """Update queue settings (host only)
+    ---
+    tags:
+      - Queues
+    parameters:
+      - in: path
+        name: queue_id
+        type: string
+        format: uuid
+        required: true
+        description: Queue identifier
+      - in: header
+        name: X-Queue-Secret
+        type: string
+        format: uuid
+        required: true
+        description: Host authentication secret
+      - in: body
+        name: body
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Updated queue name
+            default_sort_order:
+              type: string
+              enum: [votes, newest]
+              description: Default sorting order for messages
+    responses:
+      200:
+        description: Queue updated successfully
+        schema:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            default_sort_order:
+              type: string
+            expires_at:
+              type: string
+              format: date-time
+      400:
+        description: Invalid request data
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+      401:
+        description: Missing host secret
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+      403:
+        description: Invalid host credentials
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+      404:
+        description: Queue not found
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+    security:
+      - HostSecret: []
     """
     try:
         data = request.get_json() or {}
