@@ -1,7 +1,7 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from config import get_config
+from database import db, init_db
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -21,14 +21,16 @@ CORS(app,
      supports_credentials=True)
 
 # Initialize SQLAlchemy
-db = SQLAlchemy(app)
+init_db(app)
 
 # Import models after db initialization
 from models.models import Base, Queue, Message, MessageUpvote
 
 # Import and register blueprints
 from routes.events import events_bp
+from routes.queues import queues_bp
 app.register_blueprint(events_bp)
+app.register_blueprint(queues_bp)
 
 @app.route("/")
 def hello():

@@ -31,6 +31,8 @@ class Queue(Base):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if not self.expires_at:
+            if not self.created_at:
+                self.created_at = datetime.utcnow()
             self.expires_at = self.created_at + timedelta(hours=24)
 
 class Message(Base):

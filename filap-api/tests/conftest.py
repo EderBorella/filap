@@ -1,7 +1,8 @@
 import pytest
 import os
 import tempfile
-from app import app, db
+from app import app
+from database import db
 from models.models import Base
 from config import TestingConfig
 
