@@ -102,6 +102,22 @@ class EventService:
     """Service for broadcasting real-time events"""
     
     @staticmethod
+    def add_client(queue_id: str) -> str:
+        """Add a client connection for SSE events"""
+        return sse_manager.add_connection(queue_id)
+    
+    @staticmethod
+    def remove_client(queue_id: str, connection_id: str = None):
+        """Remove a client connection"""
+        if connection_id:
+            sse_manager.remove_connection(queue_id, connection_id)
+    
+    @staticmethod
+    def create_event_stream(queue_id: str):
+        """Create SSE event stream for a queue"""
+        return sse_manager.create_event_stream(queue_id)
+    
+    @staticmethod
     def broadcast_new_message(queue_id: str, message_data: Dict[str, Any]):
         """Broadcast when a new message is created"""
         sse_manager.broadcast_to_queue(

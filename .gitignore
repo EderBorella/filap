@@ -195,6 +195,12 @@ coverage.xml
 local_settings.py
 db.sqlite3
 
+# Database files
+*.db
+filap.db
+**/instance/*.db
+filap-api/instance/filap.db
+
 # Flask stuff:
 instance/
 .webassets-cache
