@@ -1,0 +1,75 @@
+from datetime import datetime, timedelta
+from sqlalchemy import Column, String, Text, Integer, DateTime, ForeignKey, Boolean
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint, Index
+import uuid
+
+Base = declarative_base()
+
+class Queue(Base):
+    __tablename__ = 'queues'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    name = Column(String(255), nullable=True)
+    host_secret = Column(UUID(as_uuid=True), nullable=False, default=uuid.uuid4, unique=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+    
+    # Queue settings
+    default_sort_order = Column(String(10), nullable=False, default='votes')  # 'votes' or 'newest'
+    
+    # Relationships
+    messages = relationship("Message", back_populates="queue", cascade="all, delete-orphan")
+    
+    # Indexes
+    __table_args__ = (
+        Index('idx_expires_at', 'expires_at'),
+    )
+    
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        if not self.expires_at:
+            self.expires_at = self.created_at + timedelta(hours=24)
+
+class Message(Base):
+    __tablename__ = 'messages'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    queue_id = Column(UUID(as_uuid=True), ForeignKey('queues.id'), nullable=False)
+    text = Column(Text, nullable=False)
+    author_name = Column(String(255), nullable=True)
+    vote_count = Column(Integer, nullable=False, default=0)
+    is_read = Column(Boolean, nullable=False, default=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    queue = relationship("Queue", back_populates="messages")
+    upvotes = relationship("MessageUpvote", back_populates="message", cascade="all, delete-orphan")
+    
+    # Indexes
+    __table_args__ = (
+        Index('idx_queue_id', 'queue_id'),
+        Index('idx_created_at', 'created_at'),
+        Index('idx_vote_count', 'vote_count'),
+    )
+
+class MessageUpvote(Base):
+    __tablename__ = 'message_upvotes'
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    message_id = Column(UUID(as_uuid=True), ForeignKey('messages.id'), nullable=False)
+    voter_token = Column(String(255), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    
+    # Relationships
+    message = relationship("Message", back_populates="upvotes")
+    
+    # Constraints
+    __table_args__ = (
+        UniqueConstraint('message_id', 'voter_token', name='uq_message_voter'),
+        Index('idx_message_id', 'message_id'),
+        Index('idx_voter_token', 'voter_token'),
+    )
