@@ -29,8 +29,10 @@ from models.models import Base, Queue, Message, MessageUpvote
 # Import and register blueprints
 from routes.events import events_bp
 from routes.queues import queues_bp
+from routes.messages import messages_bp
 app.register_blueprint(events_bp)
 app.register_blueprint(queues_bp)
+app.register_blueprint(messages_bp)
 
 @app.route("/")
 def hello():

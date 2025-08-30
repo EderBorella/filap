@@ -42,6 +42,7 @@ class Message(Base):
     queue_id = Column(UUID(as_uuid=True), ForeignKey('queues.id'), nullable=False)
     text = Column(Text, nullable=False)
     author_name = Column(String(255), nullable=True)
+    user_token = Column(UUID(as_uuid=True), nullable=False)
     vote_count = Column(Integer, nullable=False, default=0)
     is_read = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
@@ -63,7 +64,7 @@ class MessageUpvote(Base):
     
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     message_id = Column(UUID(as_uuid=True), ForeignKey('messages.id'), nullable=False)
-    voter_token = Column(String(255), nullable=False)
+    user_token = Column(String(255), nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     
     # Relationships
@@ -71,7 +72,7 @@ class MessageUpvote(Base):
     
     # Constraints
     __table_args__ = (
-        UniqueConstraint('message_id', 'voter_token', name='uq_message_voter'),
+        UniqueConstraint('message_id', 'user_token', name='uq_message_user'),
         Index('idx_message_id', 'message_id'),
-        Index('idx_voter_token', 'voter_token'),
+        Index('idx_user_token', 'user_token'),
     )

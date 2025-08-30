@@ -38,9 +38,12 @@ def main():
     tests = [
         ("python -m pytest tests/test_events.py -v --no-cov", "SSE/Events System Tests"),
         ("python -m pytest tests/test_queue_service.py -v --no-cov", "Queue Service Tests"),
+        ("python -m pytest tests/test_message_service.py -v --no-cov", "Message Service Tests"),
         ("python utils/demo.py", "Real-time Events Demo"),
         ("python -c \"from config import get_config; print('[OK] Config system working')\"", "Configuration System"),
         ("python -c \"from services.queue_service import QueueService; print('[OK] Queue service working')\"", "Queue Service Import"),
+        ("python -c \"from services.message_service import MessageService; print('[OK] Message service working')\"", "Message Service Import"),
+        ("python -c \"from services.user_service import UserService; print('[OK] User service working')\"", "User Service Import"),
     ]
     
     results = []
