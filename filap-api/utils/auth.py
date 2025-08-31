@@ -12,7 +12,7 @@ def extract_host_secret() -> Optional[str]:
     """
     return request.headers.get('X-Queue-Secret')
 
-def extract_voter_token() -> Optional[str]:
+def extract_user_token() -> Optional[str]:
     """
     Extract voter token from request headers
     
@@ -50,21 +50,21 @@ def require_host_auth(f):
     
     return decorated_function
 
-def require_voter_token(f):
+def require_user_token(f):
     """
     Decorator to require voter token for voting operations
     
-    Adds voter_token parameter to the function call.
+    Adds user_token parameter to the function call.
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Extract voter token from headers
-        voter_token = extract_voter_token()
-        if not voter_token:
+        user_token = extract_user_token()
+        if not user_token:
             return {"error": "Voter-Token header required"}, 400
         
-        # Add voter_token to kwargs for the decorated function
-        kwargs['voter_token'] = voter_token
+        # Add user_token to kwargs for the decorated function
+        kwargs['user_token'] = user_token
         return f(*args, **kwargs)
     
     return decorated_function

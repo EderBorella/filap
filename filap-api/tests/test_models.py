@@ -52,7 +52,8 @@ class TestQueueModel:
         message = Message(
             queue_id=queue.id,
             text="Test message",
-            author_name="John"
+            author_name="John",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
@@ -60,7 +61,7 @@ class TestQueueModel:
         # Create upvote
         upvote = MessageUpvote(
             message_id=message.id,
-            voter_token="test-token"
+            user_token="test-token"
         )
         test_db.session.add(upvote)
         test_db.session.commit()
@@ -91,7 +92,8 @@ class TestMessageModel:
         message = Message(
             queue_id=queue.id,
             text="Test message",
-            author_name="John Doe"
+            author_name="John Doe",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
@@ -112,7 +114,8 @@ class TestMessageModel:
         
         message = Message(
             queue_id=queue.id,
-            text="Anonymous message"
+            text="Anonymous message",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
@@ -128,7 +131,8 @@ class TestMessageModel:
         
         message = Message(
             queue_id=queue.id,
-            text="Test message"
+            text="Test message",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
@@ -154,32 +158,34 @@ class TestMessageUpvoteModel:
         
         message = Message(
             queue_id=queue.id,
-            text="Test message"
+            text="Test message",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
         
         upvote = MessageUpvote(
             message_id=message.id,
-            voter_token="unique-voter-token"
+            user_token="unique-voter-token"
         )
         test_db.session.add(upvote)
         test_db.session.commit()
         
         assert upvote.id is not None
         assert upvote.message_id == message.id
-        assert upvote.voter_token == "unique-voter-token"
+        assert upvote.user_token == "unique-voter-token"
         assert upvote.created_at is not None
     
     def test_unique_constraint(self, test_db):
-        """Test unique constraint on message_id + voter_token"""
+        """Test unique constraint on message_id + user_token"""
         queue = Queue(name="Test Queue")
         test_db.session.add(queue)
         test_db.session.commit()
         
         message = Message(
             queue_id=queue.id,
-            text="Test message"
+            text="Test message",
+            user_token=uuid.uuid4()
         )
         test_db.session.add(message)
         test_db.session.commit()
@@ -187,7 +193,7 @@ class TestMessageUpvoteModel:
         # First upvote
         upvote1 = MessageUpvote(
             message_id=message.id,
-            voter_token="same-token"
+            user_token="same-token"
         )
         test_db.session.add(upvote1)
         test_db.session.commit()
@@ -195,7 +201,7 @@ class TestMessageUpvoteModel:
         # Second upvote with same token should fail
         upvote2 = MessageUpvote(
             message_id=message.id,
-            voter_token="same-token"
+            user_token="same-token"
         )
         test_db.session.add(upvote2)
         
@@ -211,8 +217,8 @@ class TestModelRelationships:
         test_db.session.add(queue)
         test_db.session.commit()
         
-        message1 = Message(queue_id=queue.id, text="Message 1")
-        message2 = Message(queue_id=queue.id, text="Message 2")
+        message1 = Message(queue_id=queue.id, text="Message 1", user_token=uuid.uuid4())
+        message2 = Message(queue_id=queue.id, text="Message 2", user_token=uuid.uuid4())
         test_db.session.add_all([message1, message2])
         test_db.session.commit()
         
@@ -231,12 +237,12 @@ class TestModelRelationships:
         test_db.session.add(queue)
         test_db.session.commit()
         
-        message = Message(queue_id=queue.id, text="Test message")
+        message = Message(queue_id=queue.id, text="Test message", user_token=uuid.uuid4())
         test_db.session.add(message)
         test_db.session.commit()
         
-        upvote1 = MessageUpvote(message_id=message.id, voter_token="token1")
-        upvote2 = MessageUpvote(message_id=message.id, voter_token="token2")
+        upvote1 = MessageUpvote(message_id=message.id, user_token="token1")
+        upvote2 = MessageUpvote(message_id=message.id, user_token="token2")
         test_db.session.add_all([upvote1, upvote2])
         test_db.session.commit()
         

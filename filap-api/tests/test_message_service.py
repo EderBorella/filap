@@ -83,8 +83,8 @@ class TestMessageService:
         message_id = message_data['id']
         
         # Upvote with different user token
-        voter_token = str(uuid.uuid4())
-        upvoted_message = MessageService.upvote_message(message_id, voter_token)
+        user_token = str(uuid.uuid4())
+        upvoted_message = MessageService.upvote_message(message_id, user_token)
         
         assert upvoted_message is not None
         assert upvoted_message['vote_count'] == 1
@@ -107,8 +107,8 @@ class TestMessageService:
         message_id = message_data['id']
         
         # Upvote with different user token
-        voter_token = str(uuid.uuid4())
-        upvoted_message = MessageService.upvote_message(message_id, voter_token)
+        user_token = str(uuid.uuid4())
+        upvoted_message = MessageService.upvote_message(message_id, user_token)
         
         assert upvoted_message is not None
         assert upvoted_message['vote_count'] == 1
@@ -128,12 +128,12 @@ class TestMessageService:
         message_id = message_data['id']
         
         # First upvote
-        voter_token = str(uuid.uuid4())
-        upvoted_message = MessageService.upvote_message(message_id, voter_token)
+        user_token = str(uuid.uuid4())
+        upvoted_message = MessageService.upvote_message(message_id, user_token)
         assert upvoted_message['vote_count'] == 1
         
         # Second upvote with same token should fail
-        duplicate_upvote = MessageService.upvote_message(message_id, voter_token)
+        duplicate_upvote = MessageService.upvote_message(message_id, user_token)
         assert duplicate_upvote is None
     
     @patch('services.message_service.EventService.broadcast_message_updated')

@@ -81,7 +81,7 @@ This architecture ensures the app is stateless, scalable for multiple sessions, 
 3. MessageUpvote Model (message_upvotes table):
 
 - id (UUID) - Upvote identifier
-- message_id & voter_token - Voting relationship
+- message_id & user_token - Voting relationship
 - Unique constraint preventing duplicate votes
 - Proper indexes
 
@@ -144,8 +144,8 @@ This architecture ensures the app is stateless, scalable for multiple sessions, 
 
    1. POST /api/messages/{message_id}/upvote
 
-      - Purpose: Cast an upvote for a message. The server checks the voter_token to enforce one vote per person.
-      - Authentication: The voter_token must be sent in a header (e.g., Voter-Token). This is not a secret but an anonymous identifier.
+      - Purpose: Cast an upvote for a message. The server checks the user_token to enforce one vote per person.
+      - Authentication: The user_token must be sent in a header (e.g., user_token). This is not a secret but an anonymous identifier.
       - Request Body: None, or { "action": "add" } if you want one endpoint to also handle un-upvoting.
       - Response: 201 Created. Returns the updated message object with the new vote_count. Triggers a real-time update.
 
