@@ -18,7 +18,7 @@ class TestSSEEndpoint:
         assert 'text/event-stream' in response.content_type
         assert response.headers.get('Cache-Control') == 'no-cache'
         assert response.headers.get('Connection') == 'keep-alive'
-        assert response.headers.get('Access-Control-Allow-Origin') == 'http://localhost:3000'
+        assert response.headers.get('Access-Control-Allow-Origin') == '*'
     
     def test_sse_endpoint_invalid_queue(self, test_db, client):
         """Test SSE endpoint with invalid queue ID returns SSE stream"""

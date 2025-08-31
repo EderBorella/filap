@@ -200,6 +200,7 @@ db.sqlite3
 filap.db
 **/instance/*.db
 filap-api/instance/filap.db
+filap-api/instance/
 
 # Flask stuff:
 instance/
@@ -249,3 +250,6 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# Virtual environment
+filap-api/.venv/
