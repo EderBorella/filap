@@ -6,21 +6,22 @@ export interface CreateQueueRequest {
   default_sort_order?: 'votes' | 'newest';
 }
 
-export interface QueueResponse {
-  id?: string;
-  name?: string;
-  host_secret?: string;
+// Use the exact OpenAPI generated types
+export type QueueResponse = {
   created_at?: string;
-  expires_at?: string;
   default_sort_order?: string;
-}
-
-export interface QueueMetadata {
+  expires_at?: string;
+  host_secret?: string;
   id?: string;
   name?: string;
+};
+
+export type QueueMetadata = {
   default_sort_order?: 'votes' | 'newest';
   expires_at?: string;
-}
+  id?: string;
+  name?: string;
+};
 
 export interface UpdateQueueRequest {
   name?: string;
