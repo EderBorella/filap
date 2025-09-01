@@ -1,0 +1,146 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+// Modal backdrop overlay
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: map-get($z-index, modal-backdrop);
+  @include flex-center;
+  padding: spacing(4);
+  animation: fadeIn map-get($transitions, normal);
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+// Modal container
+.confirmation-modal {
+  background: color(surface);
+  border-radius: map-get($border-radius, medium);
+  box-shadow: map-get($shadows, large);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow: hidden;
+  z-index: map-get($z-index, modal);
+  animation: slideInScale map-get($transitions, normal);
+  
+  @keyframes slideInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  &__header {
+    @include flex-between;
+    padding: spacing(6);
+    border-bottom: 1px solid color(gray-200);
+  }
+  
+  &__title {
+    font-size: map-get($font-sizes, h3); // 1.5rem
+    font-weight: map-get($font-weights, semibold);
+    color: color(text-primary);
+    margin: 0;
+  }
+  
+  &__close {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: map-get($border-radius, small);
+    color: color(text-secondary);
+    cursor: pointer;
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      background: color(gray-100);
+      color: color(text-primary);
+    }
+    
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  &__body {
+    padding: spacing(6);
+  }
+  
+  &__message {
+    font-size: map-get($font-sizes, body);
+    line-height: map-get($line-heights, relaxed);
+    color: color(text-primary);
+    margin: 0;
+  }
+  
+  &__footer {
+    display: flex;
+    gap: spacing(3);
+    padding: spacing(6);
+    border-top: 1px solid color(gray-200);
+    justify-content: flex-end;
+    
+    @include respond-to(sm) {
+      flex-direction: row;
+    }
+    
+    .btn {
+      flex: 1;
+      
+      @include respond-to(sm) {
+        flex: 0 0 auto;
+        min-width: 100px;
+      }
+    }
+  }
+}
+
+// Danger button variant for destructive actions
+.btn--danger {
+  @include button-base;
+  background: color(error);
+  color: color(surface);
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  
+  &::before {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
+  
+  &:hover:not(:disabled) {
+    background: #DC2626; // Darker red on hover
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.6);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.4);
+  }
+}

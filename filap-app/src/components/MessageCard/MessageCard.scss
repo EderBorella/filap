@@ -1,0 +1,234 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.message-card {
+  display: flex;
+  gap: spacing(4);
+  padding: spacing(4);
+  background: color(surface);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all map-get($transitions, fast);
+  
+  &:hover {
+    background: color(gray-50);
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  // Read state styling
+  &--read {
+    background: color(gray-100);
+
+    &:hover {
+      // Keep the background consistent on hover for read messages
+      background: color(gray-100);
+    }
+  }
+  
+  &--unread {
+    // Add a subtle left border for unread messages
+    border-left: 3px solid transparent;
+    
+    &:hover {
+      border-left-color: color(primary);
+    }
+  }
+  
+  // Left Section - Voting
+  &__voting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: spacing(1);
+    flex-shrink: 0;
+  }
+  
+  &__vote-button {
+    @include flex-center;
+    width: 44px; // Minimum touch target
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: color(text-secondary);
+    border-radius: map-get($border-radius, medium);
+    cursor: pointer;
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #DC2626;
+      transform: scale(1.1);
+    }
+    
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+    
+    &--voted {
+      color: color(primary); // #4F46E5
+      
+      &:hover {
+        background: rgba(79, 70, 229, 0.1);
+        color: color(primary-hover);
+      }
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  &__vote-count {
+    font-size: map-get($font-sizes, small);
+    font-weight: map-get($font-weights, medium);
+    color: color(text-secondary);
+    min-width: 24px;
+    text-align: center;
+  }
+  
+  // Center Section - Content
+  &__content {
+    flex: 1;
+    min-width: 0; // Allow text to wrap
+  }
+  
+  &__text {
+    font-size: map-get($font-sizes, body); // 1rem
+    line-height: map-get($line-heights, normal); // 1.5
+    color: color(text-primary);
+    margin-bottom: spacing(2);
+    word-wrap: break-word;
+  }
+  
+  &__metadata {
+    font-size: map-get($font-sizes, small); // 0.875rem
+    color: color(secondary); // #6B7280
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+  }
+  
+  // Right Section - Actions
+  &__actions {
+    display: flex;
+    align-items: flex-start;
+    gap: spacing(2);
+    flex-shrink: 0;
+  }
+  
+  &__read-status {
+    @include flex-center;
+    width: 24px;
+    height: 24px;
+  }
+  
+  &__read-icon {
+    color: color(success); // #10B981
+    width: 16px;
+    height: 16px;
+  }
+  
+  &__unread-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1px solid color(gray-300);
+    background: transparent;
+  }
+  
+  &__host-actions {
+    display: flex;
+    gap: spacing(2); // 8px between action icons
+    margin-left: spacing(1);
+  }
+  
+  &__action-button {
+    @include flex-center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: color(text-secondary);
+    border-radius: map-get($border-radius, small);
+    cursor: pointer;
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      background: color(gray-100);
+      color: color(text-primary);
+      transform: scale(1.1);
+    }
+    
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+    
+    &--danger {
+      &:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: color(error);
+      }
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  
+  // Animation for new messages
+  &.message-card--entering {
+    animation: slideInFromBottom map-get($transitions, normal);
+    
+    @keyframes slideInFromBottom {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+  
+  // Animation for updated messages
+  &.message-card--updated {
+    animation: highlightPulse 2s ease-in-out;
+    
+    @keyframes highlightPulse {
+      0%, 100% {
+        background: color(surface);
+      }
+      50% {
+        background: rgba(79, 70, 229, 0.1);
+      }
+    }
+  }
+  
+  // Mobile optimizations
+  @include respond-to(sm) {
+    gap: spacing(3);
+    padding: spacing(3);
+    
+    &__vote-button {
+      width: 36px;
+      height: 36px;
+    }
+    
+    &__action-button {
+      width: 28px;
+      height: 28px;
+      
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}

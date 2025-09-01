@@ -1,0 +1,393 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.contact {
+  min-height: 100vh;
+  background: color(background);
+  padding: spacing(12) 0 spacing(16);
+
+  // Container with max-width
+  &__container {
+    @include container;
+    max-width: 1200px;
+  }
+
+  // Header section
+  &__header {
+    text-align: center;
+    margin-bottom: spacing(12);
+
+    @include respond-to(sm) {
+      margin-bottom: spacing(8);
+    }
+  }
+
+  &__title {
+    font-size: map-get($font-sizes, h1);
+    font-weight: map-get($font-weights, semibold);
+    color: color(text-primary);
+    margin-bottom: spacing(4);
+  }
+
+  &__subtitle {
+    font-size: map-get($font-sizes, lg);
+    color: color(text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: map-get($line-heights, relaxed);
+  }
+
+  // Main content layout
+  &__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: spacing(16);
+    align-items: start;
+
+    @include respond-to(md) {
+      grid-template-columns: 1fr;
+      gap: spacing(12);
+    }
+
+    @include respond-to(sm) {
+      gap: spacing(8);
+    }
+  }
+
+  // Developer info section
+  &__info {
+    background: color(surface);
+    border-radius: map-get($border-radius, large);
+    padding: spacing(8);
+    box-shadow: map-get($shadows, medium);
+    border: 1px solid color(gray-200);
+
+    @include respond-to(sm) {
+      padding: spacing(6);
+    }
+  }
+
+  &__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__avatar {
+    margin-bottom: spacing(6);
+  }
+
+  &__avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, color(primary), color(primary-hover));
+    border-radius: 50%;
+    @include flex-center;
+    color: white;
+    box-shadow: map-get($shadows, large);
+
+    @include respond-to(sm) {
+      width: 100px;
+      height: 100px;
+    }
+
+    svg {
+      width: 60px;
+      height: 60px;
+
+      @include respond-to(sm) {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  }
+
+  &__name {
+    font-size: map-get($font-sizes, h2);
+    font-weight: map-get($font-weights, semibold);
+    color: color(text-primary);
+    margin-bottom: spacing(2);
+  }
+
+  &__role {
+    font-size: map-get($font-sizes, lg);
+    color: color(primary);
+    font-weight: map-get($font-weights, medium);
+    margin-bottom: spacing(6);
+  }
+
+  &__description {
+    color: color(text-secondary);
+    line-height: map-get($line-heights, relaxed);
+    margin-bottom: spacing(8);
+    text-align: left;
+
+    p {
+      margin-bottom: spacing(4);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // Social links
+  &__social {
+    display: flex;
+    gap: spacing(4);
+    justify-content: center;
+    margin-bottom: spacing(6);
+
+    @include respond-to(sm) {
+      flex-direction: column;
+      align-items: center;
+      gap: spacing(3);
+    }
+  }
+
+  &__social-link {
+    display: flex;
+    align-items: center;
+    gap: spacing(2);
+    padding: spacing(3) spacing(4);
+    background: color(gray-50);
+    border: 1px solid color(gray-200);
+    border-radius: map-get($border-radius, medium);
+    color: color(text-secondary);
+    text-decoration: none;
+    font-weight: map-get($font-weights, medium);
+    font-size: map-get($font-sizes, sm);
+    transition: all map-get($transitions, fast);
+
+    &:hover {
+      background: color(primary);
+      border-color: color(primary);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: map-get($shadows, medium);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @include respond-to(sm) {
+      width: 200px;
+      justify-content: center;
+    }
+  }
+
+  // Direct contact info
+  &__direct {
+    border-top: 1px solid color(gray-200);
+    padding-top: spacing(6);
+  }
+
+  &__email {
+    @include flex-center;
+    gap: spacing(2);
+    color: color(text-secondary);
+    font-size: map-get($font-sizes, sm);
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Fira Code', monospace;
+
+    svg {
+      color: color(primary);
+    }
+  }
+
+  // Form section
+  &__form-section {
+    background: color(surface);
+    border-radius: map-get($border-radius, large);
+    padding: spacing(8);
+    box-shadow: map-get($shadows, medium);
+    border: 1px solid color(gray-200);
+    height: fit-content;
+
+    @include respond-to(sm) {
+      padding: spacing(6);
+    }
+  }
+
+  &__form-title {
+    font-size: map-get($font-sizes, h3);
+    font-weight: map-get($font-weights, semibold);
+    color: color(text-primary);
+    margin-bottom: spacing(6);
+    text-align: center;
+  }
+
+  // Form styles
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(6);
+  }
+
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(2);
+  }
+
+  &__label {
+    font-weight: map-get($font-weights, medium);
+    color: color(text-primary);
+    font-size: map-get($font-sizes, sm);
+  }
+
+  &__input,
+  &__textarea {
+    padding: spacing(3) spacing(4);
+    border: 2px solid color(gray-200);
+    border-radius: map-get($border-radius, medium);
+    font-size: map-get($font-sizes, body);
+    color: color(text-primary);
+    background: color(surface);
+    transition: all map-get($transitions, fast);
+    font-family: inherit;
+
+    &::placeholder {
+      color: color(gray-400);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: color(primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    &:disabled {
+      background: color(gray-50);
+      color: color(text-secondary);
+      cursor: not-allowed;
+    }
+  }
+
+  &__textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: map-get($line-heights, normal);
+  }
+
+  &__submit {
+    margin-top: spacing(2);
+    padding: spacing(4) spacing(8);
+    font-size: map-get($font-sizes, body);
+    font-weight: map-get($font-weights, medium);
+  }
+
+  &__form-note {
+    margin-top: spacing(6);
+    padding: spacing(4);
+    background: color(gray-50);
+    border-radius: map-get($border-radius, small);
+    font-size: map-get($font-sizes, sm);
+    color: color(text-secondary);
+    line-height: map-get($line-heights, normal);
+    text-align: center;
+  }
+
+  &__email-link {
+    color: color(primary);
+    text-decoration: none;
+    font-weight: map-get($font-weights, medium);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  // Animations
+  &__info,
+  &__form-section {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  &__form-section {
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Responsive adjustments
+  @include respond-to(lg) {
+    &__content {
+      gap: spacing(12);
+    }
+  }
+
+  @include respond-to(md) {
+    &__info {
+      order: 2;
+    }
+
+    &__form-section {
+      order: 1;
+    }
+  }
+
+  @include respond-to(sm) {
+    padding: spacing(8) 0 spacing(12);
+
+    &__title {
+      font-size: map-get($font-sizes, h2);
+    }
+
+    &__subtitle {
+      font-size: map-get($font-sizes, body);
+    }
+
+    &__name {
+      font-size: map-get($font-sizes, h3);
+    }
+
+    &__role {
+      font-size: map-get($font-sizes, body);
+    }
+  }
+
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    &__info,
+    &__form-section {
+      border-width: 2px;
+    }
+
+    &__input,
+    &__textarea {
+      border-width: 2px;
+    }
+  }
+
+  // Dark mode preparation (if needed later)
+  @media (prefers-color-scheme: dark) {
+    // Dark mode styles can be added here if needed
+  }
+
+  // Print styles
+  @media print {
+    &__form-section {
+      display: none;
+    }
+
+    &__social-link {
+      &::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.8em;
+        color: color(text-secondary);
+      }
+    }
+  }
+}

@@ -1,0 +1,65 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $nav-height;
+  @include nav-blur;
+  border-bottom: 1px solid color(gray-200);
+  z-index: map-get($z-index, fixed);
+  
+  &__container {
+    @include container;
+    height: 100%;
+    @include flex-between;
+  }
+  
+  &__brand {
+    font-size: map-get($font-sizes, large);
+    font-weight: map-get($font-weights, semibold);
+    color: color(primary);
+    text-decoration: none;
+    transition: color map-get($transitions, fast);
+    
+    &:hover {
+      color: color(primary-hover);
+      text-decoration: none;
+    }
+    
+    @include focus-ring;
+  }
+  
+  &__links {
+    display: none;
+    gap: spacing(8);
+    
+    @include respond-to(md) {
+      display: flex;
+    }
+  }
+  
+  &__link {
+    color: color(text-secondary);
+    font-weight: map-get($font-weights, medium);
+    padding: spacing(2) spacing(3);
+    border-radius: map-get($border-radius, small);
+    transition: all map-get($transitions, fast);
+    text-decoration: none;
+    
+    &:hover {
+      color: color(text-primary);
+      background: color(gray-100);
+      text-decoration: none;
+    }
+    
+    &--active {
+      color: color(primary);
+      background: rgba(79, 70, 229, 0.1);
+    }
+    
+    @include focus-ring;
+  }
+}

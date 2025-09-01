@@ -1,0 +1,135 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: spacing(3);
+  padding: spacing(4);
+  border-radius: map-get($border-radius, medium);
+  box-shadow: map-get($shadows, large);
+  background: color(surface);
+  border: 1px solid transparent;
+  min-width: 320px;
+  max-width: 480px;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all map-get($transitions, normal);
+  
+  &--visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  
+  &--exiting {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  
+  // Success toast - Light green
+  &--success {
+    background: #F0FDF4; // Very light green background
+    border-color: #BBF7D0; // Light green border
+    color: #15803D; // Dark green text
+    
+    .toast__icon {
+      color: #16A34A; // Medium green icon
+    }
+  }
+  
+  // Error toast - Soft red
+  &--error {
+    background: #FEF2F2; // Very light red background
+    border-color: #FECACA; // Light red border
+    color: #DC2626; // Dark red text
+    
+    .toast__icon {
+      color: #EF4444; // Medium red icon
+    }
+  }
+  
+  // Info toast - Blue
+  &--info {
+    background: #EFF6FF; // Very light blue background
+    border-color: #DBEAFE; // Light blue border
+    color: #1D4ED8; // Dark blue text
+    
+    .toast__icon {
+      color: #3B82F6; // Medium blue icon
+    }
+  }
+  
+  &__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: spacing(1); // Align with first line of text
+    
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  &__content {
+    flex: 1;
+    min-width: 0; // Allow text to wrap
+  }
+  
+  &__message {
+    margin: 0;
+    font-size: map-get($font-sizes, body);
+    font-weight: map-get($font-weights, regular);
+    line-height: map-get($line-heights, normal);
+    word-break: break-word;
+  }
+  
+  &__close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    @include flex-center;
+    background: none;
+    border: none;
+    border-radius: map-get($border-radius, small);
+    cursor: pointer;
+    color: currentColor;
+    opacity: 0.6;
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    
+    &:focus {
+      outline: 2px solid currentColor;
+      outline-offset: 1px;
+    }
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+// Toast container
+.toast-container {
+  position: fixed;
+  top: spacing(20); // Below navigation
+  right: spacing(4);
+  z-index: map-get($z-index, tooltip);
+  display: flex;
+  flex-direction: column;
+  gap: spacing(3);
+  pointer-events: none;
+  
+  @include respond-to(sm) {
+    right: spacing(6);
+  }
+  
+  .toast {
+    pointer-events: auto;
+  }
+}

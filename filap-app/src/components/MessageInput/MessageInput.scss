@@ -1,0 +1,196 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.message-input {
+  position: sticky;
+  bottom: 0;
+  background: color(surface);
+  border-top: 1px solid color(gray-200);
+  padding: spacing(4);
+  z-index: map-get($z-index, sticky);
+  
+  @include respond-to(md) {
+    padding: spacing(6);
+    position: relative;
+    bottom: auto;
+  }
+  
+  &__form {
+    width: 100%;
+    max-width: 768px;
+    margin: 0 auto;
+  }
+  
+  &__author-section {
+    margin-bottom: spacing(3);
+    animation: slideDown map-get($transitions, normal);
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+        max-height: 0;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 60px;
+      }
+    }
+  }
+  
+  &__author-name {
+    @include input-base;
+    height: spacing(10); // 40px
+    font-size: map-get($font-sizes, body);
+    border-radius: map-get($border-radius, medium);
+  }
+  
+  &__main {
+    display: flex;
+    gap: spacing(3);
+    align-items: flex-end;
+  }
+  
+  &__textarea-container {
+    flex: 1;
+    position: relative;
+  }
+  
+  &__textarea {
+    width: 100%;
+    min-height: 56px; // Minimum height as per design specs
+    max-height: 120px; // Maximum height as per design specs
+    padding: spacing(4);
+    border: 2px solid color(gray-200);
+    border-radius: map-get($border-radius, medium);
+    font-family: $font-family;
+    font-size: map-get($font-sizes, body);
+    line-height: map-get($line-heights, normal);
+    background: color(surface);
+    color: color(text-primary);
+    resize: none;
+    transition: all map-get($transitions, fast);
+    
+    &::placeholder {
+      color: color(text-tertiary);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: color(primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    &:disabled {
+      background: color(gray-100);
+      color: color(text-tertiary);
+      cursor: not-allowed;
+    }
+    
+    &--error {
+      border-color: color(error);
+      
+      &:focus {
+        border-color: color(error);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+      }
+    }
+  }
+  
+  &__char-counter {
+    position: absolute;
+    bottom: spacing(2);
+    right: spacing(3);
+    font-size: map-get($font-sizes, small);
+    color: color(text-tertiary);
+    font-weight: map-get($font-weights, medium);
+    transition: color map-get($transitions, fast);
+    
+    &--warning {
+      color: #F59E0B; // Amber color for warning
+    }
+    
+    &--error {
+      color: color(error);
+    }
+  }
+  
+  &__actions {
+    display: flex;
+    gap: spacing(2);
+    align-items: center;
+  }
+  
+  &__toggle-author {
+    @include flex-center;
+    width: 44px; // Minimum touch target
+    height: 44px;
+    border: none;
+    background: transparent;
+    color: color(text-secondary);
+    border-radius: map-get($border-radius, medium);
+    cursor: pointer;
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      background: color(gray-100);
+      color: color(text-primary);
+    }
+    
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+    
+    &--active {
+      background: rgba(79, 70, 229, 0.1);
+      color: color(primary);
+      
+      &:hover {
+        background: rgba(79, 70, 229, 0.15);
+      }
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+  
+  .btn {
+    height: 44px; // Match touch target size
+    min-width: 80px;
+    font-size: map-get($font-sizes, body);
+  }
+  
+  &__help {
+    margin-top: spacing(2);
+    font-size: map-get($font-sizes, small);
+    color: color(text-tertiary);
+    text-align: center;
+    
+    @include respond-to(md) {
+      text-align: left;
+    }
+  }
+}
+
+// Mobile-specific adjustments for virtual keyboard
+@media screen and (max-width: 768px) {
+  .message-input {
+    // Ensure the input area stays above virtual keyboard
+    padding-bottom: env(keyboard-inset-height, spacing(4));
+    
+    // Add safe area padding for devices with notches
+    padding-left: max(spacing(4), env(safe-area-inset-left));
+    padding-right: max(spacing(4), env(safe-area-inset-right));
+    padding-bottom: max(spacing(4), env(safe-area-inset-bottom));
+  }
+}
