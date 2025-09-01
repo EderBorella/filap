@@ -7,3 +7,4 @@ startCommand = "npm run preview"
 healthcheckPath = "/"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
+nixPkgs = ["nodejs-20_x"]
