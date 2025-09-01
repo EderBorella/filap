@@ -1,18 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  build: {
-    outDir: 'dist',
-    sourcemap: false,
-    minify: 'terser'
-  },
   preview: {
     host: '0.0.0.0',
-    port: process.env.PORT ? parseInt(process.env.PORT) : 4173,
-    allowedHosts: 'healthcheck.railway.app'
+    port: 3000,
+    allowedHosts: ['healthcheck.railway.app']
   },
   server: {
     host: '0.0.0.0',
