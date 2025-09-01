@@ -96,7 +96,14 @@ def create_tables():
     """Create all database tables"""
     Base.metadata.create_all(bind=db.engine)
 
-if __name__ == "__main__":
+def init_app():
+    """Initialize the application with database tables"""
     with app.app_context():
         create_tables()
-    app.run(debug=True)
+    return app
+
+if __name__ == "__main__":
+    import os
+    init_app()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=config.DEBUG)
