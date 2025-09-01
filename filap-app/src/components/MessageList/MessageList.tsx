@@ -152,7 +152,7 @@ const MessageList: React.FC<MessageListProps> = ({
       eventSourceRef.current.close();
     }
 
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
     const eventSource = new EventSource(`${apiUrl}/api/queues/${queueId}/events`);
     
     eventSource.onopen = () => {

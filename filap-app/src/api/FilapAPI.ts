@@ -20,7 +20,7 @@ export class FilapAPI {
     public readonly request: BaseHttpRequest;
     constructor(config?: Partial<OpenAPIConfig>, HttpRequest: HttpRequestConstructor = FetchHttpRequest) {
         this.request = new HttpRequest({
-            BASE: config?.BASE ?? 'http://localhost:5000',
+            BASE: config?.BASE ?? (import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'),
             VERSION: config?.VERSION ?? '1.0.0',
             WITH_CREDENTIALS: config?.WITH_CREDENTIALS ?? false,
             CREDENTIALS: config?.CREDENTIALS ?? 'include',
