@@ -7,19 +7,19 @@ export interface CreateQueueRequest {
 }
 
 export interface QueueResponse {
-  id: string;
+  id?: string;
   name?: string;
-  host_secret: string;
-  created_at: string;
-  expires_at: string;
-  default_sort_order: string;
+  host_secret?: string;
+  created_at?: string;
+  expires_at?: string;
+  default_sort_order?: string;
 }
 
 export interface QueueMetadata {
-  id: string;
+  id?: string;
   name?: string;
-  default_sort_order: 'votes' | 'newest';
-  expires_at: string;
+  default_sort_order?: 'votes' | 'newest';
+  expires_at?: string;
 }
 
 export interface UpdateQueueRequest {

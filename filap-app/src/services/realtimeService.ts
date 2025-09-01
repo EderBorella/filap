@@ -1,5 +1,3 @@
-import { RealTimeEventsService } from '../api';
-
 export interface SSEEvent {
   event: 'new_message' | 'message_updated' | 'message_deleted' | 'queue_updated';
   data: any;
@@ -18,7 +16,7 @@ export class RealtimeService {
     this.disconnectFromQueue(queueId);
 
     // Create new EventSource connection
-    const API_BASE_URL = process.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
     const url = `${API_BASE_URL}/api/queues/${queueId}/events`;
     const eventSource = new EventSource(url);
 
