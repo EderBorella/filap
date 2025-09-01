@@ -1,0 +1,11 @@
+// Main SCSS entry point
+// Import order is important
+
+// 1. Variables and configuration
+@import 'variables';
+
+// 2. Mixins and functions
+@import 'mixins';
+
+// 3. Base styles and reset
+@import 'base';

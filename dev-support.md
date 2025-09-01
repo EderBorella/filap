@@ -166,3 +166,4 @@ This architecture ensures the app is stateless, scalable for multiple sessions, 
 - The host_secret should never be part of the URL. The frontend should store it in memory after the host "logs in" (by entering it on a separate page or via the initial creation flow). The secret should then be sent in a special HTTP header (e.g., X-Queue-Secret) with every privileged request. This prevents it from being accidentally logged by browsers or shared via copy-paste of the main URL.
 - Separate the models in different files.
 - Change the app to have a user_permissions table. So we can have granularity in authorisation.
+- Make it possible to export the messages of a queue.

@@ -1,0 +1,67 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.footer {
+  margin-top: auto;
+  padding: spacing(8) 0; // 32px vertical padding
+  border-top: 1px solid color(gray-200);
+  background: color(background);
+  
+  &__container {
+    @include container;
+    @include flex-column;
+    align-items: center;
+    gap: spacing(4); // 16px gap between content and links
+    
+    @include respond-to(md) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  
+  &__content {
+    color: color(text-secondary);
+    font-size: map-get($font-sizes, small); // 14px
+    text-align: center;
+    
+    @include respond-to(md) {
+      text-align: left;
+    }
+  }
+  
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: spacing(6); // 24px between links
+  }
+  
+  &__link {
+    color: color(text-tertiary);
+    transition: color map-get($transitions, fast);
+    @include flex-center;
+    text-decoration: none;
+    
+    &:hover {
+      color: color(primary);
+    }
+    
+    @include focus-ring;
+    
+    // Icon links (GitHub, LinkedIn)
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    // Text links (API Documentation)
+    &--text {
+      font-size: map-get($font-sizes, small);
+      font-weight: map-get($font-weights, medium);
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

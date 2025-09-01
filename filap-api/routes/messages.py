@@ -147,11 +147,7 @@ def create_message(queue_id):
               type: string
     """
     try:
-        # Get user token from header (consistent with other endpoints)
-        user_token = request.headers.get('X-User-Token')
-        if not user_token:
-            return jsonify({'error': 'User token required'}), 400
-        
+        # Get user token from header (consistent with other endpoints)        
         data = request.get_json()
         
         if not data:
@@ -160,6 +156,10 @@ def create_message(queue_id):
         text = data.get('text')
         if not text or not text.strip():
             return jsonify({'error': 'Message text is required'}), 400
+        
+        user_token = data.get('user_token')
+        if not user_token:
+            return jsonify({'error': 'User token required'}), 400
         
         author_name = data.get('author_name')
         

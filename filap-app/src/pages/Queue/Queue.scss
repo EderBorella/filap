@@ -1,0 +1,200 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.queue-page {
+  min-height: 100vh;
+  background: color(background);
+  
+  // Container with max-width constraint
+  &__container {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: spacing(6) spacing(4);
+    
+    @include respond-to(sm) {
+      padding: spacing(4) spacing(3);
+    }
+  }
+  
+  // Header section
+  &__header {
+    margin-bottom: spacing(6);
+    
+    @include respond-to(sm) {
+      margin-bottom: spacing(4);
+    }
+  }
+  
+  // Main content area
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: spacing(6);
+    height: calc(100vh - 200px); // Adjust based on header height
+    
+    @include respond-to(sm) {
+      gap: spacing(4);
+      height: calc(100vh - 180px);
+    }
+  }
+  
+  // Message list container
+  &__messages {
+    flex: 1;
+    min-height: 0; // Allow flexbox to shrink
+  }
+  
+  // Input area
+  &__input {
+    flex-shrink: 0;
+    background: color(surface);
+    border-radius: map-get($border-radius, medium);
+    box-shadow: map-get($shadows, small);
+    padding: spacing(4);
+    border: 1px solid color(gray-200);
+    
+    @include respond-to(sm) {
+      padding: spacing(3);
+      border-radius: map-get($border-radius, small);
+      // Sticky on mobile
+      position: sticky;
+      bottom: spacing(3);
+      z-index: 5;
+    }
+  }
+  
+  // Loading state
+  &--loading {
+    @include flex-center;
+  }
+  
+  &__loading {
+    @include flex-center;
+    flex-direction: column;
+    gap: spacing(4);
+    padding: spacing(12);
+    text-align: center;
+  }
+  
+  &__loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid color(gray-200);
+    border-top-color: color(primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  &__loading-text {
+    font-size: map-get($font-sizes, body);
+    color: color(text-secondary);
+    margin: 0;
+  }
+  
+  // Error state
+  &--error {
+    @include flex-center;
+  }
+  
+  &__error {
+    @include flex-center;
+    flex-direction: column;
+    gap: spacing(4);
+    padding: spacing(12);
+    text-align: center;
+    max-width: 400px;
+  }
+  
+  &__error-icon {
+    color: color(error);
+    opacity: 0.8;
+  }
+  
+  &__error-title {
+    font-size: map-get($font-sizes, h2);
+    font-weight: map-get($font-weights, semibold);
+    color: color(text-primary);
+    margin: 0;
+  }
+  
+  &__error-message {
+    font-size: map-get($font-sizes, body);
+    color: color(text-secondary);
+    line-height: map-get($line-heights, normal);
+    margin: 0;
+  }
+  
+  // Animations
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  // Mobile optimizations
+  @include respond-to(sm) {
+    &__container {
+      max-width: 100%;
+    }
+    
+    &__main {
+      gap: spacing(3);
+    }
+    
+    &__input {
+      margin: 0 calc(0px - #{spacing(3)});
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+  }
+  
+  // Dark mode support (if needed later)
+  @media (prefers-color-scheme: dark) {
+    // Can add dark mode styles here if needed
+  }
+  
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    &__input {
+      border-width: 2px;
+    }
+    
+    &__loading-spinner {
+      border-width: 4px;
+    }
+  }
+  
+  // Reduced motion
+  @media (prefers-reduced-motion: reduce) {
+    &__loading-spinner {
+      animation: none;
+      border-top-color: transparent;
+      border-right-color: color(primary);
+    }
+  }
+  
+  // Focus management for accessibility
+  &:focus-within {
+    .queue-page__input {
+      box-shadow: map-get($shadows, medium);
+      border-color: color(primary);
+    }
+  }
+  
+  // Print styles
+  @media print {
+    &__input {
+      display: none;
+    }
+    
+    &__main {
+      height: auto;
+    }
+    
+    background: white;
+  }
+}

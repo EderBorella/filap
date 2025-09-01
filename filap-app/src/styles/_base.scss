@@ -1,0 +1,271 @@
+// Base styles and global resets
+@import 'variables';
+@import 'mixins';
+
+// CSS Reset and base styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  font-family: $font-family;
+  font-size: map-get($font-sizes, body);
+  line-height: map-get($line-heights, normal);
+  color: color(text-primary);
+  background-color: color(background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: map-get($font-weights, semibold);
+  line-height: map-get($line-heights, tight);
+  margin-bottom: spacing(4);
+}
+
+h1 {
+  font-size: map-get($font-sizes, h1);
+}
+
+h2 {
+  font-size: map-get($font-sizes, h2);
+}
+
+h3 {
+  font-size: map-get($font-sizes, h3);
+}
+
+p {
+  margin-bottom: spacing(4);
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Links
+a {
+  color: color(primary);
+  text-decoration: none;
+  transition: color map-get($transitions, fast);
+  
+  &:hover {
+    color: color(primary-hover);
+    text-decoration: underline;
+  }
+  
+  @include focus-ring;
+}
+
+// Lists
+ul, ol {
+  padding-left: spacing(5);
+  margin-bottom: spacing(4);
+}
+
+li {
+  margin-bottom: spacing(1);
+}
+
+// Forms
+button {
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+}
+
+// Button classes
+.btn {
+  @include button-base;
+  height: spacing(10); // Default height
+  padding: 0 spacing(4);
+  font-size: map-get($font-sizes, body);
+  
+  &--primary {
+    @include button-primary;
+  }
+  
+  &--secondary {
+    @include button-secondary;
+  }
+  
+  &--ghost {
+    @include button-ghost;
+  }
+  
+  &--large {
+    height: spacing(12); // 48px for large buttons
+    padding: 0 spacing(6);
+    font-size: map-get($font-sizes, large);
+  }
+  
+  &--loading {
+    position: relative;
+    color: transparent !important;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      @include loading-spinner;
+      color: inherit;
+    }
+  }
+}
+
+// Input classes
+.input {
+  @include input-base;
+  
+  &--large {
+    height: spacing(12);
+    padding: spacing(3) spacing(4);
+    font-size: map-get($font-sizes, large);
+  }
+  
+  &--error {
+    border-color: color(error);
+    
+    &:focus {
+      border-color: color(error);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+// Images
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+// Utility classes
+.container {
+  @include container;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.visually-hidden {
+  @include visually-hidden;
+}
+
+// Spacing utilities
+@each $name, $value in $spacing {
+  .mt-#{$name} { margin-top: $value; }
+  .mb-#{$name} { margin-bottom: $value; }
+  .ml-#{$name} { margin-left: $value; }
+  .mr-#{$name} { margin-right: $value; }
+  .mx-#{$name} { margin-left: $value; margin-right: $value; }
+  .my-#{$name} { margin-top: $value; margin-bottom: $value; }
+  .m-#{$name} { margin: $value; }
+  
+  .pt-#{$name} { padding-top: $value; }
+  .pb-#{$name} { padding-bottom: $value; }
+  .pl-#{$name} { padding-left: $value; }
+  .pr-#{$name} { padding-right: $value; }
+  .px-#{$name} { padding-left: $value; padding-right: $value; }
+  .py-#{$name} { padding-top: $value; padding-bottom: $value; }
+  .p-#{$name} { padding: $value; }
+}
+
+// Flexbox utilities
+.flex {
+  display: flex;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.flex-center {
+  @include flex-center;
+}
+
+.flex-between {
+  @include flex-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+// Display utilities
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.hidden {
+  display: none;
+}
+
+// Responsive utilities
+@include respond-to(sm) {
+  .sm\:block { display: block; }
+  .sm\:hidden { display: none; }
+  .sm\:flex { display: flex; }
+}
+
+@include respond-to(md) {
+  .md\:block { display: block; }
+  .md\:hidden { display: none; }
+  .md\:flex { display: flex; }
+}
+
+@include respond-to(lg) {
+  .lg\:block { display: block; }
+  .lg\:hidden { display: none; }
+  .lg\:flex { display: flex; }
+}
