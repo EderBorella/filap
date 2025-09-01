@@ -7,6 +7,3 @@ startCommand = "npm run preview"
 healthcheckPath = "/"
 healthcheckTimeout = 30
 restartPolicyType = "on_failure"
-
-[variables]
-NIXPACKS_NODE_VERSION = "22"
