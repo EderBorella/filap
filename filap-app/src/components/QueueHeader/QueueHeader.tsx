@@ -23,6 +23,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true); // Collapsed by default on mobile
   const { showSuccess, showError } = useToast();
 
   // Check if user is host
@@ -76,13 +77,39 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
     }
   };
 
+  const toggleCollapse = (): void => {
+    setIsCollapsed(!isCollapsed);
+  };
+
   return (
-    <div className="queue-header">
-      <div className="queue-header__info">
-        {/* Queue Name */}
-        <h1 className="queue-header__name">
+    <div className={`queue-header ${isCollapsed ? 'queue-header--collapsed' : 'queue-header--expanded'}`}>
+      {/* Mobile Toggle Button */}
+      <button 
+        className="queue-header__toggle-btn"
+        onClick={toggleCollapse}
+        aria-label={isCollapsed ? 'Expand header' : 'Collapse header'}
+        aria-expanded={!isCollapsed}
+      >
+        <h1 className="queue-header__name queue-header__name--compact">
           {queueName || 'Live Q&A Session'}
         </h1>
+        <svg 
+          className={`queue-header__toggle-arrow ${isCollapsed ? '' : 'queue-header__toggle-arrow--expanded'}`}
+          width="20" 
+          height="20" 
+          viewBox="0 0 20 20" 
+          fill="currentColor"
+        >
+          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+        </svg>
+      </button>
+
+      <div className="queue-header__content">
+        <div className="queue-header__info">
+          {/* Queue Name (Desktop) */}
+          <h1 className="queue-header__name queue-header__name--desktop">
+            {queueName || 'Live Q&A Session'}
+          </h1>
 
         {/* Queue ID with Copy Functionality */}
         <div className="queue-header__id-container">
@@ -163,6 +190,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 };

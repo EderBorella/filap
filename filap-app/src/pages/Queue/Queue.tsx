@@ -9,10 +9,10 @@ import MessageInput from '../../components/MessageInput';
 import './Queue.scss';
 
 interface QueueData {
-  id: string;
+  id?: string;
   name?: string;
-  expires_at: string;
-  default_sort_order: SortOption;
+  expires_at?: string;
+  default_sort_order?: SortOption;
 }
 
 const Queue: React.FC = () => {
@@ -178,7 +178,7 @@ const Queue: React.FC = () => {
           <QueueHeader
             queueId={queueId!}
             queueName={queueData.name}
-            expiresAt={queueData.expires_at}
+            expiresAt={queueData.expires_at || ''}
             currentSort={currentSort}
             onSortChange={handleSortChange}
           />

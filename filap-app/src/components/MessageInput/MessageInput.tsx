@@ -164,6 +164,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
               className={`message-input__toggle-author ${showAuthorField ? 'message-input__toggle-author--active' : ''}`}
               onClick={toggleAuthorField}
               disabled={isSubmitting || isApiSubmitting}
+              title={showAuthorField ? 'Hide name field' : 'Add your name (optional)'}
               aria-label={showAuthorField ? 'Hide name field' : 'Show name field'}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">

@@ -48,8 +48,8 @@
   
   &__main {
     display: flex;
+    flex-direction: column;
     gap: spacing(3);
-    align-items: flex-end;
   }
   
   &__textarea-container {
@@ -99,10 +99,9 @@
   }
   
   &__char-counter {
-    position: absolute;
-    bottom: spacing(2);
-    right: spacing(3);
-    font-size: map-get($font-sizes, small);
+    margin-top: spacing(2);
+    text-align: right;
+    font-size: map-get($font-sizes, xs); // Smaller font size
     color: color(text-tertiary);
     font-weight: map-get($font-weights, medium);
     transition: color map-get($transitions, fast);
@@ -118,8 +117,9 @@
   
   &__actions {
     display: flex;
-    gap: spacing(2);
+    gap: spacing(3);
     align-items: center;
+    width: 100%;
   }
   
   &__toggle-author {
@@ -165,6 +165,7 @@
   }
   
   .btn {
+    flex: 1; // Take up remaining horizontal space
     height: 44px; // Match touch target size
     min-width: 80px;
     font-size: map-get($font-sizes, body);
@@ -178,6 +179,17 @@
     
     @include respond-to(md) {
       text-align: left;
+    }
+  }
+}
+
+// Mobile-specific adjustments
+@media (max-width: 639px) { // Mobile only (below sm breakpoint)
+  .message-input {
+    padding: spacing(3) spacing(3) 0; // Remove bottom padding on mobile
+    
+    &__help {
+      display: none; // Hide keyboard shortcut help on mobile
     }
   }
 }

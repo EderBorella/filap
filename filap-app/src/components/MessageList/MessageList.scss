@@ -234,6 +234,13 @@
   }
   
   // Mobile optimizations
+  @media (max-width: 639px) { // Mobile only (below sm breakpoint)
+    &__status {
+      position: static; // Remove sticky positioning on mobile
+      z-index: auto;
+    }
+  }
+  
   @include respond-to(sm) {
     height: 75vh;
     border-radius: 0;

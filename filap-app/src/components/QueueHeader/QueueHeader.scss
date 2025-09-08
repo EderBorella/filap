@@ -6,6 +6,10 @@
   background: color(surface);
   border-bottom: 1px solid color(gray-200);
   
+  @media (max-width: 639px) { // Mobile only (below sm breakpoint)
+    padding: spacing(2); // Reduced padding on mobile
+  }
+  
   @include respond-to(md) {
     padding: spacing(6);
   }
@@ -234,6 +238,89 @@
     }
   }
   
+  // Mobile collapsible functionality
+  &__toggle-btn {
+    display: none; // Hidden on desktop
+    
+    @media (max-width: 639px) { // Mobile only (below sm breakpoint)
+      @include flex-between;
+      width: 100%;
+      padding: spacing(2) spacing(3); // Reduced vertical padding
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      transition: background-color map-get($transitions, fast);
+      
+      &:hover {
+        background: color(gray-50);
+      }
+      
+      &:focus {
+        outline: 2px solid color(primary);
+        outline-offset: 2px;
+      }
+    }
+  }
+  
+  &__toggle-arrow {
+    transition: transform map-get($transitions, fast);
+    color: color(text-secondary);
+    
+    &--expanded {
+      transform: rotate(180deg);
+    }
+  }
+  
+  &__name--compact {
+    display: none; // Hidden on desktop
+    
+    @media (max-width: 639px) { // Mobile only
+      display: block;
+      font-size: map-get($font-sizes, body);
+      font-weight: map-get($font-weights, semibold);
+      color: color(text-primary);
+      margin: 0;
+    }
+  }
+  
+  &__name--desktop {
+    @media (max-width: 639px) { // Hidden on mobile
+      display: none;
+    }
+  }
+  
+  &__content {
+    @media (max-width: 639px) { // Mobile only
+      overflow: hidden;
+      transition: all map-get($transitions, medium);
+    }
+  }
+  
+  // Collapsed state (mobile only)
+  &--collapsed {
+    @media (max-width: 639px) {
+      .queue-header__content {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+      }
+    }
+  }
+  
+  // Expanded state (mobile only)
+  &--expanded {
+    @media (max-width: 639px) {
+      .queue-header__content {
+        max-height: 500px; // Large enough to accommodate content
+        opacity: 1;
+        padding-top: spacing(3);
+        padding-bottom: spacing(3);
+      }
+    }
+  }
+  
   // Responsive adjustments
   @include respond-to(sm) {
     &__info {
@@ -242,6 +329,13 @@
     
     &__controls {
       justify-content: space-between;
+    }
+    
+    // Ensure content is always visible on desktop
+    &__content {
+      max-height: none !important;
+      opacity: 1 !important;
+      padding: 0 !important;
     }
   }
 }

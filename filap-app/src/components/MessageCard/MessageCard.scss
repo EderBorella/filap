@@ -112,12 +112,30 @@
     gap: spacing(2);
   }
   
-  // Right Section - Actions
+  // Actions sections
   &__actions {
     display: flex;
     align-items: flex-start;
     gap: spacing(2);
     flex-shrink: 0;
+    
+    // Mobile actions (below content)
+    &--mobile {
+      display: none; // Hidden by default (desktop)
+      margin-top: spacing(3);
+      justify-content: flex-end;
+      
+      @media (max-width: 639px) { // Mobile only
+        display: flex;
+      }
+    }
+    
+    // Desktop actions (right side)
+    &--desktop {
+      @media (max-width: 639px) { // Hidden on mobile
+        display: none;
+      }
+    }
   }
   
   &__read-status {

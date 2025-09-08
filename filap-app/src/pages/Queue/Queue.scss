@@ -33,8 +33,9 @@
     height: calc(100vh - 200px); // Adjust based on header height
     
     @include respond-to(sm) {
-      gap: spacing(4);
-      height: calc(100vh - 180px);
+      gap: 0;
+      height: calc(100vh - 120px);
+      position: relative;
     }
   }
   
@@ -42,6 +43,11 @@
   &__messages {
     flex: 1;
     min-height: 0; // Allow flexbox to shrink
+    overflow-y: auto;
+    
+    @include respond-to(sm) {
+      padding-bottom: spacing(20); // Add space for fixed input
+    }
   }
   
   // Input area
@@ -55,11 +61,16 @@
     
     @include respond-to(sm) {
       padding: spacing(3);
-      border-radius: map-get($border-radius, small);
-      // Sticky on mobile
-      position: sticky;
-      bottom: spacing(3);
-      z-index: 5;
+      border-radius: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      margin: 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
     }
   }
   
@@ -135,6 +146,18 @@
   }
   
   // Mobile optimizations
+  @media (max-width: 639px) { // Mobile only (below sm breakpoint)
+    &__container {
+      max-width: 100%;
+      padding: spacing(3) spacing(3) 0; // Reduced padding, no bottom padding
+    }
+    
+    &__main {
+      gap: spacing(2);
+      height: calc(100vh - 80px); // Adjust height for mobile
+    }
+  }
+  
   @include respond-to(sm) {
     &__container {
       max-width: 100%;
@@ -142,13 +165,6 @@
     
     &__main {
       gap: spacing(3);
-    }
-    
-    &__input {
-      margin: 0 calc(0px - #{spacing(3)});
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
     }
   }
   
