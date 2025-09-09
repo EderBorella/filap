@@ -68,17 +68,18 @@
     }
     
     &--voted {
-      color: color(primary); // #4F46E5
+      color: #DC2626; // Red color for voted state
       
       &:hover {
-        background: rgba(79, 70, 229, 0.1);
-        color: color(primary-hover);
+        background: rgba(220, 38, 38, 0.1); // Light red background on hover
+        color: #B91C1C; // Darker red on hover
+        transform: scale(1.1); // Same scaling as unvoted state
       }
     }
     
     svg {
-      width: 20px;
-      height: 20px;
+      width: 24px;
+      height: 24px;
     }
   }
   

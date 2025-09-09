@@ -285,8 +285,12 @@ def get_messages(queue_id):
         if offset < 0:
             return jsonify({'error': 'Offset must be non-negative'}), 400
         
+        # Get user token from header (optional for vote status)
+        user_token = request.headers.get('X-User-Token')
+        
         result = MessageService.get_messages(
             queue_id=queue_id,
+            user_token=user_token,
             sort_by=sort_by,
             limit=limit,
             offset=offset
@@ -512,7 +516,7 @@ def delete_message(queue_id, message_id):
 
 @messages_bp.route('/api/messages/<message_id>/upvote', methods=['POST'])
 def upvote_message(message_id):
-    """Cast an upvote for a message
+    """Toggle upvote for a message (add vote if not voted, remove if already voted)
     ---
     tags:
       - Voting
@@ -531,7 +535,7 @@ def upvote_message(message_id):
         description: User token for vote tracking
     responses:
       201:
-        description: Upvote cast successfully
+        description: Vote toggled successfully
         schema:
           type: object
           properties:
@@ -567,7 +571,7 @@ def upvote_message(message_id):
             error:
               type: string
       404:
-        description: Message not found or already voted
+        description: Message not found
         schema:
           type: object
           properties:
@@ -595,7 +599,7 @@ def upvote_message(message_id):
         )
         
         if message_data is None:
-            return jsonify({'error': 'Message not found or already voted'}), 404
+            return jsonify({'error': 'Message not found'}), 404
         
         return jsonify(message_data), 201
         

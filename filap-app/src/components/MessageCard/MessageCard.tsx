@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StorageService, MessageService } from '../../services';
 import { useConfirmationModal } from '../ConfirmationModal';
 import { useToast } from '../Toast';
@@ -28,6 +28,14 @@ const MessageCard: React.FC<MessageCardProps> = ({
   const { showConfirmation, ConfirmationModalComponent } = useConfirmationModal();
   const { showSuccess, showError } = useToast();
   
+  // Local state for vote status - initialized from backend response
+  const [isVoted, setIsVoted] = useState(hasUserVoted);
+  
+  // Sync with backend updates (SSE)
+  useEffect(() => {
+    setIsVoted(hasUserVoted);
+  }, [hasUserVoted]);
+  
   // Check if user is host
   const isHost = StorageService.isHost(queueId);
 
@@ -49,12 +57,6 @@ const MessageCard: React.FC<MessageCardProps> = ({
   };
 
   const handleVote = async (): Promise<void> => {
-    // Prevent double voting
-    if (hasUserVoted) {
-      showError("You can't vote twice on the same message.");
-      return;
-    }
-
     try {
       const userToken = StorageService.getUserToken(queueId);
       if (!userToken) {
@@ -62,11 +64,22 @@ const MessageCard: React.FC<MessageCardProps> = ({
         return;
       }
 
+      // Store current state and optimistically update for immediate feedback
+      const wasVoted = isVoted;
+      setIsVoted(!wasVoted);
+
       await MessageService.upvoteMessage(id, userToken);
-      showSuccess('Vote added!');
+      
+      if (wasVoted) {
+        showSuccess('Vote removed!');
+      } else {
+        showSuccess('Vote added!');
+      }
     } catch (error) {
       console.error('Error voting:', error);
-      showError(`Failed to vote. You can't vote twice!`);
+      // Revert optimistic update on error
+      setIsVoted(isVoted);
+      showError('Failed to update vote. Please try again.');
     }
   };
 
@@ -128,19 +141,19 @@ const MessageCard: React.FC<MessageCardProps> = ({
         {/* Left Section - Voting */}
         <div className="message-card__voting">
           <button
-            className={`message-card__vote-button ${hasUserVoted ? 'message-card__vote-button--voted' : ''}`}
+            className={`message-card__vote-button ${isVoted ? 'message-card__vote-button--voted' : ''}`}
             onClick={handleVote}
-            aria-label={hasUserVoted ? 'Remove vote' : 'Vote for this message'}
+            aria-label={isVoted ? 'Remove your vote' : 'Vote for this message'}
           >
-            {hasUserVoted ? (
+            {isVoted ? (
               // Filled heart icon
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                <path d="M21.721 5.821a4.75 4.75 0 00-6.721 0L12 8.821 9.721 5.821a4.75 4.75 0 00-6.721 6.721L12 21.542l9-9a4.75 4.75 0 000-6.721z" />
               </svg>
             ) : (
               // Outlined heart icon
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21.721 5.821a4.75 4.75 0 00-6.721 0L12 8.821 9.721 5.821a4.75 4.75 0 00-6.721 6.721L12 21.542l9-9a4.75 4.75 0 000-6.721z" />
               </svg>
             )}
           </button>

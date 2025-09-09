@@ -77,12 +77,13 @@ class MessageService:
             raise ValueError("Failed to create message")
     
     @staticmethod
-    def get_messages(queue_id: str, sort_by: Optional[str] = None, limit: int = 50, offset: int = 0) -> Optional[Dict[str, Any]]:
+    def get_messages(queue_id: str, user_token: Optional[str] = None, sort_by: Optional[str] = None, limit: int = 50, offset: int = 0) -> Optional[Dict[str, Any]]:
         """
         Get messages for a queue with pagination and sorting
         
         Args:
             queue_id: Queue UUID
+            user_token: User token to check vote status (optional)
             sort_by: Sort order ("votes" or "newest", defaults to queue's default)
             limit: Number of messages to return (max 100)
             offset: Offset for pagination
@@ -114,8 +115,19 @@ class MessageService:
         if sort_by not in ["votes", "newest"]:
             sort_by = queue.default_sort_order
         
-        # Build query
-        query = db.session.query(Message).filter_by(queue_id=queue_uuid)
+        # Build query with LEFT JOIN to get user vote status
+        if user_token:
+            # Query with vote status when user token is provided
+            query = db.session.query(
+                Message,
+                MessageUpvote.message_id.isnot(None).label('has_user_voted')
+            ).outerjoin(
+                MessageUpvote,
+                (MessageUpvote.message_id == Message.id) & (MessageUpvote.user_token == user_token)
+            ).filter(Message.queue_id == queue_uuid)
+        else:
+            # Query without vote status when no user token
+            query = db.session.query(Message).filter_by(queue_id=queue_uuid)
         
         # Apply sorting
         if sort_by == "votes":
@@ -124,13 +136,23 @@ class MessageService:
             query = query.order_by(desc(Message.created_at))
         
         # Get total count before pagination
-        total_count = query.count()
+        total_count = db.session.query(Message).filter_by(queue_id=queue_uuid).count()
         
-        # Apply pagination
-        messages = query.offset(offset).limit(limit).all()
+        # Apply pagination and execute
+        results = query.offset(offset).limit(limit).all()
+        
+        # Process results based on query type
+        if user_token:
+            # Extract message and vote status from tuple results
+            messages_data = []
+            for message, has_voted in results:
+                messages_data.append(MessageService._message_to_dict(message, bool(has_voted)))
+        else:
+            # Simple message results without vote status
+            messages_data = [MessageService._message_to_dict(msg) for msg in results]
         
         return {
-            "messages": [MessageService._message_to_dict(msg) for msg in messages],
+            "messages": messages_data,
             "total_count": total_count,
             "limit": limit,
             "offset": offset,
@@ -306,8 +328,31 @@ class MessageService:
         ).first()
         
         if existing_vote:
-            # User already voted
-            return None
+            # User already voted - remove the vote (toggle off)
+            try:
+                db.session.delete(existing_vote)
+                
+                # Atomically decrement vote count
+                db.session.query(Message).filter_by(id=message_uuid).update({
+                    Message.vote_count: Message.vote_count - 1
+                })
+                
+                db.session.commit()
+                
+                # Refresh message to get updated vote count
+                db.session.refresh(message)
+                
+                # User just removed their vote, so has_user_voted = False
+                message_data = MessageService._message_to_dict(message, False)
+                
+                # Broadcast real-time update
+                EventService.broadcast_message_updated(str(message.queue_id), message_data)
+                
+                return message_data
+                
+            except IntegrityError:
+                db.session.rollback()
+                return None
         
         # Create upvote
         upvote = MessageUpvote(
@@ -328,7 +373,8 @@ class MessageService:
             # Refresh message to get updated vote count
             db.session.refresh(message)
             
-            message_data = MessageService._message_to_dict(message)
+            # User just added their vote, so has_user_voted = True
+            message_data = MessageService._message_to_dict(message, True)
             
             # Broadcast real-time update
             EventService.broadcast_message_updated(str(message.queue_id), message_data)
@@ -341,12 +387,13 @@ class MessageService:
             return None
     
     @staticmethod
-    def _message_to_dict(message: Message) -> Dict[str, Any]:
+    def _message_to_dict(message: Message, has_user_voted: bool = False) -> Dict[str, Any]:
         """
         Convert Message model to dictionary
         
         Args:
             message: Message model instance
+            has_user_voted: Whether the user has voted for this message
             
         Returns:
             Dictionary representation
@@ -359,6 +406,7 @@ class MessageService:
             "user_token": str(message.user_token),
             "vote_count": message.vote_count,
             "is_read": message.is_read,
+            "has_user_voted": has_user_voted,
             "created_at": message.created_at.isoformat() + "Z",
             "updated_at": message.updated_at.isoformat() + "Z"
         }

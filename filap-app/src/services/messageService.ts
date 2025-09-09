@@ -1,4 +1,5 @@
 import { messagesService, votingService } from './apiConfig';
+import { StorageService } from './storageService';
 import type { CancelablePromise } from '../api';
 
 export interface MessageResponse {
@@ -9,6 +10,7 @@ export interface MessageResponse {
   user_token: string;
   vote_count: number;
   is_read: boolean;
+  has_user_voted: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -41,16 +43,38 @@ export class MessageService {
   /**
    * Get messages for a queue with pagination and sorting
    */
-  static getMessages(
+  static async getMessages(
     queueId: string, 
     options: GetMessagesOptions = {}
-  ): CancelablePromise<MessagesListResponse> {
-    return messagesService.getApiQueuesMessages(
-      queueId,
-      options.sort,
-      options.limit || 50,
-      options.offset || 0
-    ) as CancelablePromise<MessagesListResponse>;
+  ): Promise<MessagesListResponse> {
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const params = new URLSearchParams({
+      ...(options.sort && { sort: options.sort }),
+      limit: String(options.limit || 50),
+      offset: String(options.offset || 0)
+    });
+
+    // Get user token from StorageService for vote status
+    const userToken = StorageService.getUserToken(queueId);
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    
+    if (userToken) {
+      headers['X-User-Token'] = userToken;
+    }
+
+    const response = await fetch(`${apiUrl}/api/queues/${queueId}/messages?${params}`, {
+      method: 'GET',
+      headers
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response.json();
   }
 
   /**
