@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StorageService } from '../../services';
 import { useToast } from '../Toast';
 import './QueueHeader.scss';
@@ -20,6 +21,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
   currentSort,
   onSortChange
 }) => {
+  const { t } = useTranslation();
   const [timeRemaining, setTimeRemaining] = useState('');
   const [isExpiringSoon, setIsExpiringSoon] = useState(false);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
@@ -37,7 +39,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
       const timeDiff = expiryDate.getTime() - now.getTime();
 
       if (timeDiff <= 0) {
-        setTimeRemaining('Expired');
+        setTimeRemaining(t('queue.expired'));
         setIsExpiringSoon(true);
         return;
       }
@@ -63,11 +65,11 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
   const copyToClipboard = async (): Promise<void> => {
     try {
       await navigator.clipboard.writeText(queueId);
-      showSuccess('Queue ID copied to clipboard!');
+      showSuccess(t('toast.queueIdCopied'));
       setShowCopyTooltip(true);
       setTimeout(() => setShowCopyTooltip(false), 2000);
     } catch (error) {
-      showError('Failed to copy to clipboard');
+      showError(t('toast.errors.copyToClipboardFailed'));
     }
   };
 
@@ -87,11 +89,11 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
       <button 
         className="queue-header__toggle-btn"
         onClick={toggleCollapse}
-        aria-label={isCollapsed ? 'Expand header' : 'Collapse header'}
+        aria-label={isCollapsed ? t('queue.expandHeader') : t('queue.collapseHeader')}
         aria-expanded={!isCollapsed}
       >
         <h1 className="queue-header__name queue-header__name--compact">
-          {queueName || 'Live Q&A Session'}
+          {queueName || t('queue.liveSession')}
         </h1>
         <svg 
           className={`queue-header__toggle-arrow ${isCollapsed ? '' : 'queue-header__toggle-arrow--expanded'}`}
@@ -108,7 +110,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
         <div className="queue-header__info">
           {/* Queue Name (Desktop) */}
           <h1 className="queue-header__name queue-header__name--desktop">
-            {queueName || 'Live Q&A Session'}
+            {queueName || t('queue.liveSession')}
           </h1>
 
         {/* Queue ID with Copy Functionality */}
@@ -116,8 +118,8 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
           <button
             className="queue-header__id"
             onClick={copyToClipboard}
-            title="Click to copy Queue ID"
-            aria-label="Copy Queue ID to clipboard"
+            title={t('queue.copyQueueId')}
+            aria-label={t('queue.copyQueueId')}
           >
             <code className="queue-header__id-text">{queueId}</code>
             <svg 
@@ -135,8 +137,8 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
           <button
             className="queue-header__share"
             onClick={copyToClipboard}
-            title="Share Queue ID"
-            aria-label="Share Queue ID"
+            title={t('queue.shareQueueId')}
+            aria-label={t('queue.shareQueueId')}
           >
             <svg 
               width="18" 
@@ -149,13 +151,13 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
           </button>
           
           {showCopyTooltip && (
-            <div className="queue-header__tooltip">Copied!</div>
+            <div className="queue-header__tooltip">{t('queue.copied')}</div>
           )}
         </div>
 
         {/* Expiry Countdown */}
         <div className={`queue-header__expiry ${isExpiringSoon ? 'queue-header__expiry--warning' : ''}`}>
-          Expires in: {timeRemaining}
+          {t('queue.expiresIn', { time: timeRemaining })}
         </div>
       </div>
 
@@ -164,11 +166,11 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
         <div className="queue-header__controls">
           <div className="queue-header__host-badge">
             <span className="queue-header__badge-icon">👑</span>
-            Host Mode
+            {t('queue.hostMode')}
           </div>
 
           <div className="queue-header__sort-toggles">
-            <span className="queue-header__sort-label">Sort by:</span>
+            <span className="queue-header__sort-label">{t('queue.sortBy')}</span>
             
             <div className="queue-header__toggle-group">
               <button
@@ -176,7 +178,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
                 onClick={() => handleSortChange('votes')}
                 type="button"
               >
-                Most Votes
+                {t('queue.mostVotes')}
               </button>
               
               <button
@@ -184,7 +186,7 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
                 onClick={() => handleSortChange('newest')}
                 type="button"
               >
-                Newest
+                {t('queue.newest')}
               </button>
             </div>
           </div>

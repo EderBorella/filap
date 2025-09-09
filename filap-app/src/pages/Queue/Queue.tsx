@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { QueueService } from '../../services';
 import { StorageService } from '../../services';
@@ -6,6 +7,7 @@ import { useToast } from '../../components/Toast';
 import QueueHeader, { type SortOption } from '../../components/QueueHeader';
 import MessageList from '../../components/MessageList';
 import MessageInput from '../../components/MessageInput';
+import LanguageToggle from '../../components/LanguageToggle';
 import './Queue.scss';
 
 interface QueueData {
@@ -16,6 +18,7 @@ interface QueueData {
 }
 
 const Queue: React.FC = () => {
+  const { t } = useTranslation();
   const { queueId } = useParams<{ queueId: string }>();
   const [queueData, setQueueData] = useState<QueueData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -26,7 +29,7 @@ const Queue: React.FC = () => {
   // Fetch queue data
   const fetchQueueData = useCallback(async () => {
     if (!queueId) {
-      setError('Queue ID is required');
+      setError(t('toast.errors.queueNotFound'));
       setLoading(false);
       return;
     }
@@ -38,8 +41,8 @@ const Queue: React.FC = () => {
       setError(null);
     } catch (error) {
       console.error('Error fetching queue:', error);
-      setError('Queue not found or expired');
-      showError('Queue not found or expired. Please check your link.');
+      setError(t('queue.notFound'));
+      showError(t('toast.errors.queueNotFound'));
     } finally {
       setLoading(false);
     }
@@ -51,14 +54,14 @@ const Queue: React.FC = () => {
 
     const isHost = StorageService.isHost(queueId);
     if (!isHost) {
-      showError('Only the host can change sort order.');
+      showError(t('toast.errors.onlyHostCanSort'));
       return;
     }
 
     try {
       const hostSecret = StorageService.getHostSecret(queueId);
       if (!hostSecret) {
-        showError('Host authentication required.');
+        showError(t('toast.errors.hostAuthRequired'));
         return;
       }
 
@@ -71,10 +74,11 @@ const Queue: React.FC = () => {
       setCurrentSort(newSort);
       setQueueData(prev => prev ? { ...prev, default_sort_order: newSort } : null);
       
-      showSuccess(`Sort order changed to ${newSort === 'votes' ? 'Most Votes' : 'Newest'}`);
+      const sortLabel = newSort === 'votes' ? t('queue.mostVotes') : t('queue.newest');
+      showSuccess(t('toast.sortOrderChanged', { order: sortLabel }));
     } catch (error) {
       console.error('Error updating sort order:', error);
-      showError('Failed to update sort order. Please try again.');
+      showError(t('toast.errors.updateSortFailed'));
     }
   }, [queueData, queueId, showError, showSuccess]);
 
@@ -83,13 +87,14 @@ const Queue: React.FC = () => {
     let updated = false;
     if (updatedQueueData.default_sort_order && updatedQueueData.default_sort_order !== currentSort) {
         setCurrentSort(updatedQueueData.default_sort_order);
-        showInfo(`Sort order updated by host to: ${updatedQueueData.default_sort_order === 'votes' ? 'Most Votes' : 'Newest'}`);
+        const sortLabel = updatedQueueData.default_sort_order === 'votes' ? t('queue.mostVotes') : t('queue.newest');
+        showInfo(t('toast.sortOrderUpdated', { order: sortLabel }));
         updated = true;
     }
     if (updatedQueueData.name && updatedQueueData.name !== queueData?.name) {
         setQueueData(prev => prev ? { ...prev, name: updatedQueueData.name } : null);
         if (!updated) { // Avoid double toast
-            showInfo(`Queue name updated by host.`);
+            showInfo(t('toast.queueNameUpdated'));
         }
     }
   }, [currentSort, queueData?.name, showInfo]);
@@ -115,7 +120,7 @@ const Queue: React.FC = () => {
       } catch (error) {
         console.error('Error setting up user token:', error);
         // Only show error once and don't retry automatically
-        showError('Failed to setup user session. Please check if the backend is running.');
+        showError(t('toast.errors.backendNotRunning'));
       }
     };
 
@@ -136,9 +141,10 @@ const Queue: React.FC = () => {
         <div className="queue-page__container">
           <div className="queue-page__loading">
             <div className="queue-page__loading-spinner" />
-            <p className="queue-page__loading-text">Loading queue...</p>
+            <p className="queue-page__loading-text">{t('queue.loading')}</p>
           </div>
         </div>
+        <LanguageToggle />
       </div>
     );
   }
@@ -154,18 +160,19 @@ const Queue: React.FC = () => {
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
               </svg>
             </div>
-            <h2 className="queue-page__error-title">Queue Not Found</h2>
+            <h2 className="queue-page__error-title">{t('queue.notFound')}</h2>
             <p className="queue-page__error-message">
-              {error || 'The queue you\'re looking for doesn\'t exist or has expired.'}
+              {error || t('queue.notFoundDescription')}
             </p>
             <button 
               className="btn btn--primary"
               onClick={() => window.location.href = '/'}
             >
-              Go Home
+              {t('queue.goHome')}
             </button>
           </div>
         </div>
+        <LanguageToggle />
       </div>
     );
   }
@@ -204,6 +211,9 @@ const Queue: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Fixed language toggle */}
+      <LanguageToggle />
     </div>
   );
 };

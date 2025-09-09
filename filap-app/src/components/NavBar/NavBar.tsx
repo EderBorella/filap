@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../LanguageSwitcher';
 import './NavBar.scss';
 
 interface MenuItem {
@@ -8,18 +10,20 @@ interface MenuItem {
 }
 
 const NavBar: React.FC = () => {
+  const { t } = useTranslation();
+  
   const menuItems: MenuItem[] = [
     { 
-      label: 'Home', 
+      label: t('navigation.home'), 
       href: '/',
       active: true 
     },
     { 
-      label: 'My Queues', 
+      label: t('navigation.myQueues'), 
       href: '/queues' 
     },
     { 
-      label: 'Contact', 
+      label: t('navigation.contact'), 
       href: '/contact' 
     }
   ];
@@ -28,7 +32,7 @@ const NavBar: React.FC = () => {
     <nav className="nav">
       <div className="nav__container">
         <a href="/" className="nav__brand">
-          Filap
+          {t('appName')}
         </a>
         
         <div className="nav__links">
@@ -41,6 +45,10 @@ const NavBar: React.FC = () => {
               {item.label}
             </a>
           ))}
+        </div>
+
+        <div className="nav__actions">
+          <LanguageSwitcher />
         </div>
       </div>
     </nav>

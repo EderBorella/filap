@@ -1,0 +1,111 @@
+{
+  "appName": "Filap",
+  "navigation": {
+    "home": "Home",
+    "myQueues": "My Queues", 
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Filap",
+    "subtitle": "The lightweight Q&A platform for live audiences. Ask questions, vote for your favorites, no sign-up required.",
+    "createQueue": "Create a Queue",
+    "creating": "Creating...",
+    "joinTitle": "Have a code? Join a queue",
+    "joinPlaceholder": "Paste Queue ID here...",
+    "joinButton": "Join",
+    "joining": "Joining..."
+  },
+  "queue": {
+    "loading": "Loading queue...",
+    "notFound": "Queue Not Found",
+    "notFoundDescription": "The queue you're looking for doesn't exist or has expired.",
+    "goHome": "Go Home",
+    "liveSession": "Live Q&A Session",
+    "expiresIn": "Expires in: {{time}}",
+    "expired": "Expired",
+    "expandHeader": "Expand header",
+    "collapseHeader": "Collapse header",
+    "copyQueueId": "Click to copy Queue ID",
+    "shareQueueId": "Share Queue ID",
+    "copied": "Copied!",
+    "hostMode": "Host Mode",
+    "sortBy": "Sort by:",
+    "mostVotes": "Most Votes",
+    "newest": "Newest",
+    "liveUpdatesActive": "Live updates active",
+    "reconnecting": "Reconnecting...",
+    "noQuestionsYet": "No questions yet",
+    "beTheFirstToAsk": "Be the first to ask!"
+  },
+  "messageInput": {
+    "placeholder": "Ask your question...",
+    "namePlaceholder": "Your name (optional)",
+    "charactersRemaining": "{{count}} characters remaining",
+    "hideNameField": "Hide name field",
+    "addYourName": "Add your name (optional)",
+    "showNameField": "Show name field",
+    "send": "Send",
+    "sending": "Sending...",
+    "helpText": "Press Ctrl+Enter to send quickly"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions about Filap, want to collaborate or report bugs? I'd love to hear from you!",
+    "name": "Eder Borella",
+    "role": "Software Engineer",
+    "description": {
+      "paragraph1": "I'm a software engineer who loves building things that work well and make a difference. By day, I work with my team to tackle complex problems for the company. I don't really have a favorite tech stack, I'm always excited to learn new tools. I'm much more about using the right language or framework for the job, whatever helps me build the best solution. I've always been drawn to tough challenges; difficult problems are what really engage and motivate me.",
+      "paragraph2": "My real passion, though, is using these skills for projects that solve tangible, real-world problems. I believe the best tech is the kind that feels helpful and intuitive, making someone's day a little easier or a lot more fun. It's not just about the code, it's about the people using it.",
+      "paragraph3": "This drive is what led me to create projects like Arcane Desk, a web app I built from the ground up to help my RPG group manage our chaotic game nights. It even uses a self-hosted AI to generate characters! I'm also tinkering with an Automated Greenhouse on a Raspberry Pi, just for the joy of mixing hardware and software to grow things. For me, building is the best way to learn and help."
+    },
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "email": "ederlopesborella@gmail.com",
+    "form": {
+      "title": "Send me a message",
+      "nameLabel": "Name",
+      "nameRequired": "Name *",
+      "namePlaceholder": "Your full name",
+      "emailLabel": "Email",
+      "emailRequired": "Email *",
+      "emailPlaceholder": "your.email@example.com",
+      "subjectLabel": "Subject",
+      "subjectPlaceholder": "What's this about?",
+      "messageLabel": "Message",
+      "messageRequired": "Message *",
+      "messagePlaceholder": "Tell me about your project, question, or just say hello...",
+      "sendButton": "Send Message",
+      "sending": "Opening Email...",
+      "note": "This form will open your default email client with the message pre-filled. If it doesn't work, feel free to email me directly at",
+      "emailLink": "ederlopesborella@gmail.com"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} Eder Borella"
+  },
+  "toast": {
+    "queueCreated": "Queue created successfully!",
+    "joinedQueue": "Joined queue successfully!",
+    "messageSent": "Message sent successfully!",
+    "queueIdCopied": "Queue ID copied to clipboard!",
+    "sortOrderChanged": "Sort order changed to {{order}}",
+    "sortOrderUpdated": "Sort order updated by host to: {{order}}",
+    "queueNameUpdated": "Queue name updated by host.",
+    "emailOpened": "Email client opened! Please send the email from your email app.",
+    "errors": {
+      "createQueueFailed": "Failed to create queue. Please try again.",
+      "joinQueueFailed": "Failed to join queue. Please check the queue ID and try again.",
+      "queueNotFound": "Queue not found or expired. Please check your link.",
+      "onlyHostCanSort": "Only the host can change sort order.",
+      "hostAuthRequired": "Host authentication required.",
+      "updateSortFailed": "Failed to update sort order. Please try again.",
+      "userTokenNotFound": "User token not found. Please refresh the page.",
+      "sendMessageFailed": "Failed to send message. Please try again.",
+      "loadMessagesFailed": "Failed to load messages. Please refresh the page.",
+      "copyToClipboardFailed": "Failed to copy to clipboard",
+      "fillRequiredFields": "Please fill in all required fields.",
+      "emailClientFailed": "Failed to open email client. Please contact ederlopesborella@gmail.com directly.",
+      "backendNotRunning": "Failed to setup user session. Please check if the backend is running."
+    }
+  }
+}

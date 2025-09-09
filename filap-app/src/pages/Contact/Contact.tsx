@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '../../components/Toast';
+import LanguageToggle from '../../components/LanguageToggle';
 import './Contact.scss';
 
 const Contact: React.FC = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,7 +27,7 @@ const Contact: React.FC = () => {
     e.preventDefault();
     
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      showError('Please fill in all required fields.');
+      showError(t('toast.errors.fillRequiredFields'));
       return;
     }
 
@@ -43,11 +46,11 @@ const Contact: React.FC = () => {
       
       // Reset form
       setFormData({ name: '', email: '', subject: '', message: '' });
-      showSuccess('Email client opened! Please send the email from your email app.');
+      showSuccess(t('toast.emailOpened'));
       
     } catch (error) {
       console.error('Error opening email client:', error);
-      showError('Failed to open email client. Please contact ederlopesborella@gmail.com directly.');
+      showError(t('toast.errors.emailClientFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -58,9 +61,9 @@ const Contact: React.FC = () => {
       <div className="contact__container">
         {/* Header Section */}
         <div className="contact__header">
-          <h1 className="contact__title">Get in Touch</h1>
+          <h1 className="contact__title">{t('contact.title')}</h1>
           <p className="contact__subtitle">
-            Have questions about Filap, want to collaborate or report bugs? I'd love to hear from you!
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -235,6 +238,9 @@ const Contact: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Fixed language toggle */}
+      <LanguageToggle />
     </div>
   );
 };

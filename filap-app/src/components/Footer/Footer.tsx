@@ -1,14 +1,16 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import './Footer.scss';
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
     <footer className="footer">
       <div className="footer__container">
         <div className="footer__content">
-          © {currentYear} Eder Borella
+          {t('footer.copyright', { year: currentYear })}
         </div>
         
         <div className="footer__links">

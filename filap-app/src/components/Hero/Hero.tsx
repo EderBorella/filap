@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { QueueService, StorageService } from '../../services';
 import { useToast } from '../Toast';
 import './Hero.scss';
 
 const Hero: React.FC = () => {
+  const { t } = useTranslation();
   const [queueCode, setQueueCode] = useState('');
   const [isValidCode, setIsValidCode] = useState(false);
   const [isCreatingQueue, setIsCreatingQueue] = useState(false);
@@ -36,12 +38,12 @@ const Hero: React.FC = () => {
       });
 
       // Show success message and navigate
-      showSuccess('Queue created successfully!');
+      showSuccess(t('toast.queueCreated'));
       navigate(`/queues/${queueResponse.id}`);
       
     } catch (error) {
       console.error('Error creating queue:', error);
-      showError('Failed to create queue. Please try again.');
+      showError(t('toast.errors.createQueueFailed'));
     } finally {
       setIsCreatingQueue(false);
     }
@@ -63,12 +65,12 @@ const Hero: React.FC = () => {
       });
 
       // Show success message and navigate
-      showSuccess('Joined queue successfully!');
+      showSuccess(t('toast.joinedQueue'));
       navigate(`/queues/${queueCode}`);
       
     } catch (error) {
       console.error('Error joining queue:', error);
-      showError('Failed to join queue. Please check the queue ID and try again.');
+      showError(t('toast.errors.joinQueueFailed'));
     } finally {
       setIsJoiningQueue(false);
     }
@@ -78,9 +80,9 @@ const Hero: React.FC = () => {
     <section className="hero">
       <div className="hero__container">
         <div className="hero__content">
-          <h1 className="hero__title">Filap</h1>
+          <h1 className="hero__title">{t('hero.title')}</h1>
           <p className="hero__subtitle">
-            The lightweight Q&A platform for live audiences. Ask questions, vote for your favorites, no sign-up required.
+            {t('hero.subtitle')}
           </p>
         </div>
 
@@ -91,18 +93,18 @@ const Hero: React.FC = () => {
               onClick={handleCreateQueue}
               disabled={isCreatingQueue}
             >
-              {isCreatingQueue ? 'Creating...' : 'Create a Queue'}
+              {isCreatingQueue ? t('hero.creating') : t('hero.createQueue')}
             </button>
           </div>
 
           <div className="hero__secondary-action">
             <div className="hero__join-card">
-              <h3 className="hero__join-title">Have a code? Join a queue</h3>
+              <h3 className="hero__join-title">{t('hero.joinTitle')}</h3>
               <div className="hero__join-form">
                 <input
                   type="text"
                   className="input input--large"
-                  placeholder="Paste Queue ID here..."
+                  placeholder={t('hero.joinPlaceholder')}
                   value={queueCode}
                   onChange={handleCodeChange}
                   disabled={isJoiningQueue}
@@ -112,7 +114,7 @@ const Hero: React.FC = () => {
                   onClick={handleJoinQueue}
                   disabled={!isValidCode || isJoiningQueue}
                 >
-                  {isJoiningQueue ? 'Joining...' : 'Join'}
+                  {isJoiningQueue ? t('hero.joining') : t('hero.joinButton')}
                 </button>
               </div>
             </div>

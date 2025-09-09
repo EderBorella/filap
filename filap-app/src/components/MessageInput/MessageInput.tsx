@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MessageService } from '../../services';
 import { StorageService } from '../../services';
 import { useToast } from '../Toast';
@@ -16,15 +17,18 @@ const MessageInput: React.FC<MessageInputProps> = ({
   queueId,
   onMessageSent,
   isSubmitting = false,
-  placeholder = "Ask your question...",
+  placeholder,
   maxCharacters = 300
 }) => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState('');
   const [authorName, setAuthorName] = useState('');
   const [showAuthorField, setShowAuthorField] = useState(true);
   const [isApiSubmitting, setIsApiSubmitting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { showSuccess, showError } = useToast();
+
+  const placeholderText = placeholder || t('messageInput.placeholder');
 
   const remainingChars = maxCharacters - message.length;
   const isMessageEmpty = message.trim().length === 0;
@@ -68,7 +72,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
     try {
       const userToken = StorageService.getUserToken(queueId);
       if (!userToken) {
-        showError('User token not found. Please refresh the page.');
+        showError(t('toast.errors.userTokenNotFound'));
         setIsApiSubmitting(false);
         return;
       }
@@ -85,7 +89,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
       setShowAuthorField(false);
       
       // Show success message
-      showSuccess('Message sent successfully!');
+      showSuccess(t('toast.messageSent'));
       
       // Call optional callback
       if (onMessageSent) {
@@ -94,7 +98,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
       
     } catch (error) {
       console.error('Error sending message:', error);
-      showError('Failed to send message. Please try again.');
+      showError(t('toast.errors.sendMessageFailed'));
     } finally {
       setIsApiSubmitting(false);
     }
@@ -128,7 +132,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             <input
               type="text"
               className="message-input__author-name"
-              placeholder="Your name (optional)"
+              placeholder={t('messageInput.namePlaceholder')}
               value={authorName}
               onChange={handleAuthorNameChange}
               maxLength={100}
@@ -143,7 +147,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             <textarea
               ref={textareaRef}
               className={`message-input__textarea ${isOverLimit ? 'message-input__textarea--error' : ''}`}
-              placeholder={placeholder}
+              placeholder={placeholderText}
               value={message}
               onChange={handleMessageChange}
               onKeyDown={handleKeyDown}
@@ -153,7 +157,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             
             {/* Character Counter */}
             <div className={`message-input__char-counter ${remainingChars < 50 ? 'message-input__char-counter--warning' : ''} ${isOverLimit ? 'message-input__char-counter--error' : ''}`}>
-              {remainingChars} characters remaining
+              {t('messageInput.charactersRemaining', { count: remainingChars })}
             </div>
           </div>
 
@@ -164,8 +168,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
               className={`message-input__toggle-author ${showAuthorField ? 'message-input__toggle-author--active' : ''}`}
               onClick={toggleAuthorField}
               disabled={isSubmitting || isApiSubmitting}
-              title={showAuthorField ? 'Hide name field' : 'Add your name (optional)'}
-              aria-label={showAuthorField ? 'Hide name field' : 'Show name field'}
+              title={showAuthorField ? t('messageInput.hideNameField') : t('messageInput.addYourName')}
+              aria-label={showAuthorField ? t('messageInput.hideNameField') : t('messageInput.showNameField')}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
@@ -178,7 +182,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
               className={`btn btn--primary ${isApiSubmitting ? 'btn--loading' : ''}`}
               disabled={isMessageEmpty || isOverLimit || isSubmitting || isApiSubmitting}
             >
-              {isApiSubmitting ? 'Sending...' : 'Send'}
+              {isApiSubmitting ? t('messageInput.sending') : t('messageInput.send')}
             </button>
           </div>
         </div>
@@ -186,7 +190,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
       
       {/* Help Text */}
       <div className="message-input__help">
-        Press Ctrl+Enter to send quickly
+        {t('messageInput.helpText')}
       </div>
     </div>
   );
