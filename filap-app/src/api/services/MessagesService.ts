@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 export class MessagesService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Retrieve messages for a queue with pagination and sorting
      * @param queueId Queue identifier
@@ -15,7 +15,7 @@ export class MessagesService {
      * @returns any Messages retrieved successfully
      * @throws ApiError
      */
-    public getApiQueuesMessages(
+    public static getApiQueuesMessages(
         queueId: string,
         sort?: 'votes' | 'newest',
         limit: number = 50,
@@ -49,7 +49,7 @@ export class MessagesService {
          */
         total_count?: number;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'GET',
             url: '/api/queues/{queue_id}/messages',
             path: {
@@ -73,7 +73,7 @@ export class MessagesService {
      * @returns any Message created successfully
      * @throws ApiError
      */
-    public postApiQueuesMessages(
+    public static postApiQueuesMessages(
         queueId: string,
         body: {
             /**
@@ -100,7 +100,7 @@ export class MessagesService {
         user_token?: string;
         vote_count?: number;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'POST',
             url: '/api/queues/{queue_id}/messages',
             path: {
@@ -121,12 +121,12 @@ export class MessagesService {
      * @returns void
      * @throws ApiError
      */
-    public deleteApiQueuesMessages(
+    public static deleteApiQueuesMessages(
         queueId: string,
         messageId: string,
         xQueueSecret: string,
     ): CancelablePromise<void> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/queues/{queue_id}/messages/{message_id}',
             path: {
@@ -153,7 +153,7 @@ export class MessagesService {
      * @returns any Message updated successfully
      * @throws ApiError
      */
-    public patchApiQueuesMessages(
+    public static patchApiQueuesMessages(
         queueId: string,
         messageId: string,
         body: {
@@ -175,7 +175,7 @@ export class MessagesService {
         user_token?: string;
         vote_count?: number;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/queues/{queue_id}/messages/{message_id}',
             path: {

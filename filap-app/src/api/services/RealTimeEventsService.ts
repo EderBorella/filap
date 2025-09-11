@@ -3,19 +3,19 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 export class RealTimeEventsService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Server-Sent Events endpoint for real-time updates
      * @param queueId Queue identifier
      * @returns string SSE stream for real-time updates
      * @throws ApiError
      */
-    public getApiQueuesEvents(
+    public static getApiQueuesEvents(
         queueId: string,
     ): CancelablePromise<string> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'GET',
             url: '/api/queues/{queue_id}/events',
             path: {

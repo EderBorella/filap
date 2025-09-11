@@ -3,16 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 export class QueuesService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Create a new queue
      * @param body
      * @returns any Queue created successfully
      * @throws ApiError
      */
-    public postApiQueues(
+    public static postApiQueues(
         body?: {
             /**
              * Default sorting order for messages
@@ -40,7 +40,7 @@ export class QueuesService {
          */
         name?: string;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'POST',
             url: '/api/queues',
             body: body,
@@ -55,7 +55,7 @@ export class QueuesService {
      * @returns any Queue metadata
      * @throws ApiError
      */
-    public getApiQueues(
+    public static getApiQueues(
         queueId: string,
     ): CancelablePromise<{
         /**
@@ -75,7 +75,7 @@ export class QueuesService {
          */
         name?: string;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'GET',
             url: '/api/queues/{queue_id}',
             path: {
@@ -94,7 +94,7 @@ export class QueuesService {
      * @returns any Queue updated successfully
      * @throws ApiError
      */
-    public patchApiQueues(
+    public static patchApiQueues(
         queueId: string,
         xQueueSecret: string,
         body?: {
@@ -113,7 +113,7 @@ export class QueuesService {
         id?: string;
         name?: string;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/queues/{queue_id}',
             path: {

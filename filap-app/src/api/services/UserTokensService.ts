@@ -3,16 +3,16 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 export class UserTokensService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Generate a user token for a queue
      * @param queueId Queue identifier
      * @returns any User token generated successfully
      * @throws ApiError
      */
-    public postApiQueuesUserToken(
+    public static postApiQueuesUserToken(
         queueId: string,
     ): CancelablePromise<{
         /**
@@ -28,7 +28,7 @@ export class UserTokensService {
          */
         user_token?: string;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'POST',
             url: '/api/queues/{queue_id}/user-token',
             path: {

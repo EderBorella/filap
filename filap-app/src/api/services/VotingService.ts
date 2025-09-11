@@ -3,9 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { CancelablePromise } from '../core/CancelablePromise';
-import type { BaseHttpRequest } from '../core/BaseHttpRequest';
+import { OpenAPI } from '../core/OpenAPI';
+import { request as __request } from '../core/request';
 export class VotingService {
-    constructor(public readonly httpRequest: BaseHttpRequest) {}
     /**
      * Cast an upvote for a message
      * @param messageId Message identifier
@@ -13,7 +13,7 @@ export class VotingService {
      * @returns any Upvote cast successfully
      * @throws ApiError
      */
-    public postApiMessagesUpvote(
+    public static postApiMessagesUpvote(
         messageId: string,
         xUserToken: string,
     ): CancelablePromise<{
@@ -30,7 +30,7 @@ export class VotingService {
          */
         vote_count?: number;
     }> {
-        return this.httpRequest.request({
+        return __request(OpenAPI, {
             method: 'POST',
             url: '/api/messages/{message_id}/upvote',
             path: {

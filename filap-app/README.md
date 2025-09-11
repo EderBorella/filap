@@ -1,12 +1,26 @@
-# React + Vite
+# Filap Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite frontend for the Filap Q&A application.
 
-Currently, two official plugins are available:
+## Development Scripts
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run lint` - Run ESLint
+- `npm run preview` - Preview production build
+- `npm run generate-api` - Regenerate API client from OpenAPI spec
 
-## Expanding the ESLint configuration
+## API Client Generation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The API client is automatically generated from the backend OpenAPI specification. When the backend API changes, run:
+
+```bash
+npm run generate-api
+```
+
+This command:
+1. Reads the OpenAPI spec from `../filap-api/api_spec.json`
+2. Generates TypeScript client code in `./src/api/`
+3. Updates all service interfaces and types
+
+**Note**: Always run this command after backend API changes to ensure type safety.
