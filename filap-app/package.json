@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "npm run preview",
-    "generate-api": "openapi-typescript-codegen --input ../filap-api/api_spec.json --output ./src/api --client fetch"
+    "generate-api": "npx openapi-typescript-codegen --input ../filap-api/api_spec.json --output ./src/api --client fetch"
   },
   "dependencies": {
     "dotenv": "^16.3.1",

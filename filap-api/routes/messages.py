@@ -125,6 +125,10 @@ def create_message(queue_id):
             is_read:
               type: boolean
               default: false
+            has_user_voted:
+              type: boolean
+              default: false
+              description: Whether the current user has voted for this message
             created_at:
               type: string
               format: date-time
@@ -239,6 +243,9 @@ def get_messages(queue_id):
                     type: integer
                   is_read:
                     type: boolean
+                  has_user_voted:
+                    type: boolean
+                    description: Whether the current user has voted for this message
                   created_at:
                     type: string
                     format: date-time
@@ -369,6 +376,9 @@ def update_message(queue_id, message_id):
               type: integer
             is_read:
               type: boolean
+            has_user_voted:
+              type: boolean
+              description: Whether the current user has voted for this message
             created_at:
               type: string
               format: date-time
@@ -557,6 +567,9 @@ def upvote_message(message_id):
               description: Updated vote count
             is_read:
               type: boolean
+            has_user_voted:
+              type: boolean
+              description: Whether the current user has voted for this message
             created_at:
               type: string
               format: date-time

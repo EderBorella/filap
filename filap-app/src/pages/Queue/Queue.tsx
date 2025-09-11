@@ -112,6 +112,9 @@ const Queue: React.FC = () => {
           console.log('Generating user token...');
           // Generate new user token
           const response = await QueueService.generateUserToken(queueId);
+          if (!response.user_token) {
+            throw new Error('Failed to generate user token');
+          }
           StorageService.setUserToken(queueId, response.user_token);
           console.log('User token generated and stored');
         } else {

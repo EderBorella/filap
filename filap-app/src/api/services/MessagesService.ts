@@ -28,6 +28,10 @@ export class MessagesService {
         messages?: Array<{
             author_name?: string;
             created_at?: string;
+            /**
+             * Whether the current user has voted for this message
+             */
+            has_user_voted?: boolean;
             id?: string;
             is_read?: boolean;
             queue_id?: string;
@@ -92,6 +96,10 @@ export class MessagesService {
     ): CancelablePromise<{
         author_name?: string;
         created_at?: string;
+        /**
+         * Whether the current user has voted for this message
+         */
+        has_user_voted?: boolean;
         id?: string;
         is_read?: boolean;
         queue_id?: string;
@@ -167,6 +175,10 @@ export class MessagesService {
     ): CancelablePromise<{
         author_name?: string;
         created_at?: string;
+        /**
+         * Whether the current user has voted for this message
+         */
+        has_user_voted?: boolean;
         id?: string;
         is_read?: boolean;
         queue_id?: string;

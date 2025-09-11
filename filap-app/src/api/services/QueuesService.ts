@@ -25,7 +25,7 @@ export class QueuesService {
         },
     ): CancelablePromise<{
         created_at?: string;
-        default_sort_order?: string;
+        default_sort_order?: 'votes' | 'newest';
         expires_at?: string;
         /**
          * Host authentication secret
@@ -108,7 +108,7 @@ export class QueuesService {
             name?: string;
         },
     ): CancelablePromise<{
-        default_sort_order?: string;
+        default_sort_order?: 'votes' | 'newest';
         expires_at?: string;
         id?: string;
         name?: string;

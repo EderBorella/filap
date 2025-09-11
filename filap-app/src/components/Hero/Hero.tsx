@@ -31,6 +31,10 @@ const Hero: React.FC = () => {
       });
 
       // Store host data in localStorage
+      if (!queueResponse.id || !queueResponse.host_secret) {
+        throw new Error('Invalid queue response: missing id or host_secret');
+      }
+      
       StorageService.storeQueueData(queueResponse.id, {
         hostSecret: queueResponse.host_secret,
         queueName: queueResponse.name,

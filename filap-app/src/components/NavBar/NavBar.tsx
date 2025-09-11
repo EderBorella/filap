@@ -19,10 +19,6 @@ const NavBar: React.FC = () => {
       active: true 
     },
     { 
-      label: t('navigation.myQueues'), 
-      href: '/queues' 
-    },
-    { 
       label: t('navigation.contact'), 
       href: '/contact' 
     }

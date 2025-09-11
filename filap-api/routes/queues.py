@@ -55,6 +55,7 @@ def create_queue():
               format: date-time
             default_sort_order:
               type: string
+              enum: [votes, newest]
       400:
         description: Invalid request data
         schema:
@@ -196,6 +197,7 @@ def update_queue(queue_id: str, host_secret: str):
               type: string
             default_sort_order:
               type: string
+              enum: [votes, newest]
             expires_at:
               type: string
               format: date-time

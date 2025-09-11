@@ -1,18 +1,23 @@
-import { FilapAPI } from '../api';
+import { 
+  MessagesService,
+  QueuesService,
+  UserTokensService,
+  VotingService,
+  RealTimeEventsService,
+  OpenAPI
+} from '../api';
 import { API_BASE_URL } from '../config';
 
-// Create and configure the FilapAPI client instance
-export const apiClient = new FilapAPI({
-  BASE: API_BASE_URL,
-  WITH_CREDENTIALS: false,
-  HEADERS: {
-    'Content-Type': 'application/json',
-  },
-});
+// Configure OpenAPI settings
+OpenAPI.BASE = API_BASE_URL;
+OpenAPI.WITH_CREDENTIALS = false;
+OpenAPI.HEADERS = {
+  'Content-Type': 'application/json',
+};
 
 // Export individual services for convenience
-export const queuesService = apiClient.queues;
-export const messagesService = apiClient.messages;
-export const userTokensService = apiClient.userTokens;
-export const votingService = apiClient.voting;
-export const realTimeEventsService = apiClient.realTimeEvents;
+export const queuesService = QueuesService;
+export const messagesService = MessagesService;
+export const userTokensService = UserTokensService;
+export const votingService = VotingService;
+export const realTimeEventsService = RealTimeEventsService;

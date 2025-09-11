@@ -38,7 +38,7 @@
         ],
         "responses": {
           "201": {
-            "description": "Upvote cast successfully",
+            "description": "Vote toggled successfully",
             "schema": {
               "properties": {
                 "author_name": {
@@ -47,6 +47,10 @@
                 "created_at": {
                   "format": "date-time",
                   "type": "string"
+                },
+                "has_user_voted": {
+                  "description": "Whether the current user has voted for this message",
+                  "type": "boolean"
                 },
                 "id": {
                   "format": "uuid",
@@ -90,7 +94,7 @@
             }
           },
           "404": {
-            "description": "Message not found or already voted",
+            "description": "Message not found",
             "schema": {
               "properties": {
                 "error": {
@@ -117,7 +121,7 @@
             "UserToken": []
           }
         ],
-        "summary": "Cast an upvote for a message",
+        "summary": "Toggle upvote for a message (add vote if not voted, remove if already voted)",
         "tags": [
           "Voting"
         ]
@@ -162,6 +166,10 @@
                   "type": "string"
                 },
                 "default_sort_order": {
+                  "enum": [
+                    "votes",
+                    "newest"
+                  ],
                   "type": "string"
                 },
                 "expires_at": {
@@ -310,6 +318,10 @@
             "schema": {
               "properties": {
                 "default_sort_order": {
+                  "enum": [
+                    "votes",
+                    "newest"
+                  ],
                   "type": "string"
                 },
                 "expires_at": {
@@ -496,6 +508,10 @@
                         "format": "date-time",
                         "type": "string"
                       },
+                      "has_user_voted": {
+                        "description": "Whether the current user has voted for this message",
+                        "type": "boolean"
+                      },
                       "id": {
                         "format": "uuid",
                         "type": "string"
@@ -625,6 +641,11 @@
                 "created_at": {
                   "format": "date-time",
                   "type": "string"
+                },
+                "has_user_voted": {
+                  "default": false,
+                  "description": "Whether the current user has voted for this message",
+                  "type": "boolean"
                 },
                 "id": {
                   "format": "uuid",
@@ -823,6 +844,10 @@
                 "created_at": {
                   "format": "date-time",
                   "type": "string"
+                },
+                "has_user_voted": {
+                  "description": "Whether the current user has voted for this message",
+                  "type": "boolean"
                 },
                 "id": {
                   "format": "uuid",

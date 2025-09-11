@@ -1,4 +1,4 @@
-import { queuesService, userTokensService } from './apiConfig';
+import { QueuesService, UserTokensService } from '../api';
 import type { CancelablePromise } from '../api';
 
 export interface CreateQueueRequest {
@@ -9,7 +9,7 @@ export interface CreateQueueRequest {
 // Use the exact OpenAPI generated types
 export type QueueResponse = {
   created_at?: string;
-  default_sort_order?: string;
+  default_sort_order?: 'votes' | 'newest';
   expires_at?: string;
   host_secret?: string;
   id?: string;
@@ -29,9 +29,9 @@ export interface UpdateQueueRequest {
 }
 
 export interface UserTokenResponse {
-  user_token: string;
-  queue_id: string;
-  expires_at: string;
+  user_token?: string;
+  queue_id?: string;
+  expires_at?: string;
 }
 
 export class QueueService {
@@ -39,7 +39,7 @@ export class QueueService {
    * Create a new queue
    */
   static createQueue(data: CreateQueueRequest = {}): CancelablePromise<QueueResponse> {
-    return queuesService.postApiQueues({
+    return QueuesService.postApiQueues({
       name: data.name,
       default_sort_order: data.default_sort_order || 'votes'
     });
@@ -49,14 +49,14 @@ export class QueueService {
    * Get queue metadata
    */
   static getQueueMetadata(queueId: string): CancelablePromise<QueueMetadata> {
-    return queuesService.getApiQueues(queueId);
+    return QueuesService.getApiQueues(queueId);
   }
 
   /**
    * Get queue metadata (alias for consistency)
    */
   static getQueue(queueId: string): CancelablePromise<QueueMetadata> {
-    return queuesService.getApiQueues(queueId);
+    return QueuesService.getApiQueues(queueId);
   }
 
   /**
@@ -67,14 +67,14 @@ export class QueueService {
     data: UpdateQueueRequest,
     hostSecret: string
   ): CancelablePromise<QueueMetadata> {
-    return queuesService.patchApiQueues(queueId, hostSecret, data);
+    return QueuesService.patchApiQueues(queueId, hostSecret, data);
   }
 
   /**
    * Generate a user token for a queue
    */
   static generateUserToken(queueId: string): CancelablePromise<UserTokenResponse> {
-    return userTokensService.postApiQueuesUserToken(queueId);
+    return UserTokensService.postApiQueuesUserToken(queueId);
   }
 
   /**

@@ -29,7 +29,7 @@ paths:
         type: string
       responses:
         '201':
-          description: Upvote cast successfully
+          description: Vote toggled successfully
           schema:
             properties:
               author_name:
@@ -37,6 +37,9 @@ paths:
               created_at:
                 format: date-time
                 type: string
+              has_user_voted:
+                description: Whether the current user has voted for this message
+                type: boolean
               id:
                 format: uuid
                 type: string
@@ -65,7 +68,7 @@ paths:
                 type: string
             type: object
         '404':
-          description: Message not found or already voted
+          description: Message not found
           schema:
             properties:
               error:
@@ -80,7 +83,8 @@ paths:
             type: object
       security:
       - UserToken: []
-      summary: Cast an upvote for a message
+      summary: Toggle upvote for a message (add vote if not voted, remove if already
+        voted)
       tags:
       - Voting
   /api/queues:
@@ -112,6 +116,9 @@ paths:
                 format: date-time
                 type: string
               default_sort_order:
+                enum:
+                - votes
+                - newest
                 type: string
               expires_at:
                 format: date-time
@@ -214,6 +221,9 @@ paths:
           schema:
             properties:
               default_sort_order:
+                enum:
+                - votes
+                - newest
                 type: string
               expires_at:
                 format: date-time
@@ -340,6 +350,9 @@ paths:
                     created_at:
                       format: date-time
                       type: string
+                    has_user_voted:
+                      description: Whether the current user has voted for this message
+                      type: boolean
                     id:
                       format: uuid
                       type: string
@@ -429,6 +442,10 @@ paths:
               created_at:
                 format: date-time
                 type: string
+              has_user_voted:
+                default: false
+                description: Whether the current user has voted for this message
+                type: boolean
               id:
                 format: uuid
                 type: string
@@ -562,6 +579,9 @@ paths:
               created_at:
                 format: date-time
                 type: string
+              has_user_voted:
+                description: Whether the current user has voted for this message
+                type: boolean
               id:
                 format: uuid
                 type: string

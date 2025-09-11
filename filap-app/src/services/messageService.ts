@@ -1,4 +1,4 @@
-import { messagesService, votingService } from './apiConfig';
+import { MessagesService, VotingService } from '../api';
 import { StorageService } from './storageService';
 import type { CancelablePromise } from '../api';
 
@@ -84,7 +84,7 @@ export class MessageService {
     queueId: string, 
     data: CreateMessageRequest
   ): CancelablePromise<MessageResponse> {
-    return messagesService.postApiQueuesMessages(queueId, {
+    return MessagesService.postApiQueuesMessages(queueId, {
       text: data.text,
       author_name: data.author_name,
       user_token: data.user_token
@@ -101,7 +101,7 @@ export class MessageService {
     hostSecret?: string,
     userToken?: string
   ): CancelablePromise<MessageResponse> {
-    return messagesService.patchApiQueuesMessages(
+    return MessagesService.patchApiQueuesMessages(
       queueId,
       messageId,
       data,
@@ -118,7 +118,7 @@ export class MessageService {
     messageId: string,
     hostSecret: string
   ): CancelablePromise<void> {
-    return messagesService.deleteApiQueuesMessages(
+    return MessagesService.deleteApiQueuesMessages(
       queueId,
       messageId,
       hostSecret
@@ -132,6 +132,6 @@ export class MessageService {
     messageId: string,
     userToken: string
   ): CancelablePromise<MessageResponse> {
-    return votingService.postApiMessagesUpvote(messageId, userToken) as CancelablePromise<MessageResponse>;
+    return VotingService.postApiMessagesUpvote(messageId, userToken) as CancelablePromise<MessageResponse>;
   }
 }
