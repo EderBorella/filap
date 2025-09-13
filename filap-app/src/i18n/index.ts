@@ -20,7 +20,6 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: 'en', // default language
     fallbackLng: 'en',
     debug: import.meta.env.DEV,
 
@@ -29,6 +28,10 @@ i18n
       order: ['localStorage', 'navigator', 'htmlTag'],
       caches: ['localStorage'],
     },
+
+    // Define supported languages
+    supportedLngs: ['en', 'pt'],
+    nonExplicitSupportedLngs: true,
 
     interpolation: {
       escapeValue: false, // React already escapes values
