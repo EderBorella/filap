@@ -48,6 +48,29 @@
     "sending": "Enviando...",
     "helpText": "Pressione Ctrl+Enter para enviar rapidamente"
   },
+  "handRaise": {
+    "loading": "Carregando mãos levantadas...",
+    "connected": "Atualizações ao vivo ativas",
+    "connecting": "Conectando...",
+    "activeRaises": "Mãos Levantadas Ativas",
+    "completedRaises": "Concluídas",
+    "noActiveRaises": "Ninguém levantou a mão ainda. Seja o primeiro!",
+    "markCompleted": "Marcar como concluído",
+    "complete": "Concluir",
+    "completedAt": "Concluído às",
+    "yourName": "Seu Nome",
+    "namePlaceholder": "Digite seu nome",
+    "nameRequired": "Nome é obrigatório",
+    "nameHelp": "Este nome será visível para o host",
+    "raiseHand": "Levantar Mão",
+    "lowerHand": "Baixar Mão",
+    "processing": "Processando...",
+    "handRaised": "Mão levantada com sucesso!",
+    "handLowered": "Mão baixada com sucesso!",
+    "yourPosition": "Você é o #{{position}} na fila",
+    "questions": "Perguntas",
+    "speakers": "Falantes"
+  },
   "contact": {
     "title": "Entre em Contato",
     "subtitle": "Tem dúvidas sobre o Filap, quer colaborar ou reportar bugs? Adoraria ouvir de você!",
@@ -105,7 +128,11 @@
       "copyToClipboardFailed": "Falha ao copiar para a área de transferência",
       "fillRequiredFields": "Por favor, preencha todos os campos obrigatórios.",
       "emailClientFailed": "Falha ao abrir cliente de email. Por favor, entre em contato com ederlopesborella@gmail.com diretamente.",
-      "backendNotRunning": "Falha ao configurar sessão do usuário. Verifique se o backend está rodando."
+      "backendNotRunning": "Falha ao configurar sessão do usuário. Verifique se o backend está rodando.",
+      "fetchHandRaisesFailed": "Falha ao carregar mãos levantadas. Atualize a página.",
+      "handRaiseFailed": "Falha ao levantar/baixar mão. Tente novamente.",
+      "markCompletedFailed": "Falha ao marcar mão levantada como concluída. Tente novamente.",
+      "userTokenRequired": "Sessão do usuário necessária. Atualize a página."
     }
   }
 }
