@@ -22,6 +22,7 @@ class Queue(Base):
     
     # Relationships
     messages = relationship("Message", back_populates="queue", cascade="all, delete-orphan")
+    hand_raises = relationship("HandRaise", back_populates="queue", cascade="all, delete-orphan")
     
     # Indexes
     __table_args__ = (
@@ -75,4 +76,26 @@ class MessageUpvote(Base):
         UniqueConstraint('message_id', 'user_token', name='uq_message_user'),
         Index('idx_message_id', 'message_id'),
         Index('idx_user_token', 'user_token'),
+    )
+
+class HandRaise(Base):
+    __tablename__ = 'hand_raises'
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    queue_id = Column(UUID(as_uuid=True), ForeignKey('queues.id'), nullable=False)
+    user_token = Column(String(255), nullable=False)
+    user_name = Column(String(255), nullable=False)
+    raised_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    completed = Column(Boolean, nullable=False, default=False)
+    completed_at = Column(DateTime, nullable=True)
+
+    # Relationships
+    queue = relationship("Queue", back_populates="hand_raises")
+
+    # Constraints and Indexes
+    __table_args__ = (
+        UniqueConstraint('queue_id', 'user_token', 'completed', name='uq_queue_user_active'),
+        Index('idx_queue_completed_raised', 'queue_id', 'completed', 'raised_at'),
+        Index('idx_queue_id_handraise', 'queue_id'),
+        Index('idx_user_token_handraise', 'user_token'),
     )

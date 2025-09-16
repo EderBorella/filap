@@ -152,3 +152,30 @@ class EventService:
             event_type="queue_updated",
             data=queue_data
         )
+
+    @staticmethod
+    def broadcast_hand_raise_new(queue_id: str, hand_raise_data: Dict[str, Any]):
+        """Broadcast when a new hand is raised"""
+        sse_manager.broadcast_to_queue(
+            queue_id=queue_id,
+            event_type="hand_raise_new",
+            data=hand_raise_data
+        )
+
+    @staticmethod
+    def broadcast_hand_raise_updated(queue_id: str, hand_raise_data: Dict[str, Any]):
+        """Broadcast when a hand raise is updated (marked as completed)"""
+        sse_manager.broadcast_to_queue(
+            queue_id=queue_id,
+            event_type="hand_raise_updated",
+            data=hand_raise_data
+        )
+
+    @staticmethod
+    def broadcast_hand_raise_removed(queue_id: str, hand_raise_id: str):
+        """Broadcast when a hand raise is removed (user lowered hand)"""
+        sse_manager.broadcast_to_queue(
+            queue_id=queue_id,
+            event_type="hand_raise_removed",
+            data={"id": hand_raise_id}
+        )
