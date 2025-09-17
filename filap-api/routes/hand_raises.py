@@ -1,5 +1,9 @@
 from flask import Blueprint, request, jsonify
 from services.hand_raise_service import HandRaiseService
+import logging
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 hand_raises_bp = Blueprint('hand_raises', __name__)
 
@@ -110,8 +114,10 @@ def raise_hand(queue_id):
         return jsonify(hand_raise_data), 201
 
     except ValueError as e:
+        logger.error(f"ValueError in raise_hand for queue {queue_id}: {str(e)}")
         return jsonify({'error': str(e)}), 400
     except Exception as e:
+        logger.error(f"Error in raise_hand for queue {queue_id}: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @hand_raises_bp.route('/api/queues/<queue_id>/handraises', methods=['GET'])
@@ -196,6 +202,7 @@ def get_hand_raises(queue_id):
         return jsonify(hand_raises_data), 200
 
     except Exception as e:
+        logger.error(f"Error in get_hand_raises for queue {queue_id}: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @hand_raises_bp.route('/api/queues/<queue_id>/handraises/<hand_raise_id>', methods=['PATCH'])
@@ -312,10 +319,10 @@ def update_hand_raise(queue_id, hand_raise_id):
         return jsonify(hand_raise_data), 200
 
     except ValueError as e:
-        print(f"DEBUG: ValueError in update_hand_raise: {str(e)}")
+        logger.error(f"ValueError in update_hand_raise for queue {queue_id}, hand_raise {hand_raise_id}: {str(e)}")
         return jsonify({'error': str(e)}), 400
     except Exception as e:
-        print(f"DEBUG: Exception in update_hand_raise: {str(e)}")
+        logger.error(f"Error in update_hand_raise for queue {queue_id}, hand_raise {hand_raise_id}: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @hand_raises_bp.route('/api/queues/<queue_id>/user-position', methods=['GET'])
@@ -388,4 +395,5 @@ def get_user_position(queue_id):
         }), 200
 
     except Exception as e:
+        logger.error(f"Error in get_user_position for queue {queue_id}, user_token {user_token}: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
