@@ -2,7 +2,7 @@
 export { QueueService } from './queueService';
 export { MessageService } from './messageService';
 export { RealtimeService } from './realtimeService';
-export { StorageService } from './storageService';
+export { StorageService } from './StorageService';
 
 // Export types
 export type { CreateQueueRequest, QueueResponse, QueueMetadata, UpdateQueueRequest, UserTokenResponse } from './queueService';

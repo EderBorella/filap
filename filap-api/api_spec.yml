@@ -305,6 +305,244 @@ paths:
       summary: Server-Sent Events endpoint for real-time updates
       tags:
       - Real-time Events
+  /api/queues/{queue_id}/handraise:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Queue identifier
+        format: uuid
+        in: path
+        name: queue_id
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            user_name:
+              description: User's display name (1-100 characters)
+              maxLength: 100
+              minLength: 1
+              type: string
+            user_token:
+              description: User token for identification
+              type: string
+          required:
+          - user_token
+          - user_name
+          type: object
+      responses:
+        '200':
+          description: Hand lowered successfully (empty response)
+        '201':
+          description: Hand raised successfully
+          schema:
+            properties:
+              completed:
+                type: boolean
+              completed_at:
+                format: date-time
+                nullable: true
+                type: string
+              id:
+                format: uuid
+                type: string
+              queue_id:
+                format: uuid
+                type: string
+              raised_at:
+                format: date-time
+                type: string
+              user_name:
+                type: string
+              user_token:
+                type: string
+            type: object
+        '400':
+          description: Bad request (invalid input)
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '404':
+          description: Queue not found or expired
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '500':
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Raise or lower a hand for a user in a queue
+      tags:
+      - Hand Raises
+  /api/queues/{queue_id}/handraises:
+    get:
+      parameters:
+      - description: Queue identifier
+        format: uuid
+        in: path
+        name: queue_id
+        required: true
+        type: string
+      - default: false
+        description: Whether to include completed hand raises
+        in: query
+        name: include_completed
+        type: boolean
+      responses:
+        '200':
+          description: Hand raises retrieved successfully
+          schema:
+            properties:
+              active_hand_raises:
+                items:
+                  properties:
+                    completed:
+                      type: boolean
+                    completed_at:
+                      format: date-time
+                      nullable: true
+                      type: string
+                    id:
+                      format: uuid
+                      type: string
+                    queue_id:
+                      format: uuid
+                      type: string
+                    raised_at:
+                      format: date-time
+                      type: string
+                    user_name:
+                      type: string
+                    user_token:
+                      type: string
+                  type: object
+                type: array
+              completed_hand_raises:
+                items:
+                  type: object
+                type: array
+              total_active:
+                type: integer
+              total_completed:
+                type: integer
+            type: object
+        '404':
+          description: Queue not found or expired
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '500':
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get all hand raises for a queue
+      tags:
+      - Hand Raises
+  /api/queues/{queue_id}/handraises/{hand_raise_id}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Queue identifier
+        format: uuid
+        in: path
+        name: queue_id
+        required: true
+        type: string
+      - description: Hand raise identifier
+        format: uuid
+        in: path
+        name: hand_raise_id
+        required: true
+        type: string
+      - description: Host authentication secret
+        format: uuid
+        in: header
+        name: X-Queue-Secret
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          properties:
+            completed:
+              description: Mark hand raise as completed/uncompleted
+              type: boolean
+          type: object
+      responses:
+        '200':
+          description: Hand raise updated successfully
+          schema:
+            properties:
+              completed:
+                type: boolean
+              completed_at:
+                format: date-time
+                nullable: true
+                type: string
+              id:
+                format: uuid
+                type: string
+              queue_id:
+                format: uuid
+                type: string
+              raised_at:
+                format: date-time
+                type: string
+              user_name:
+                type: string
+              user_token:
+                type: string
+            type: object
+        '400':
+          description: Bad request
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '401':
+          description: Unauthorized (invalid host secret)
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '404':
+          description: Queue or hand raise not found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '500':
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      security:
+      - HostSecret: []
+      summary: Update a hand raise (host only)
+      tags:
+      - Hand Raises
   /api/queues/{queue_id}/messages:
     get:
       parameters:
@@ -628,6 +866,56 @@ paths:
       summary: Update a message (host or author)
       tags:
       - Messages
+  /api/queues/{queue_id}/user-position:
+    get:
+      parameters:
+      - description: Queue identifier
+        format: uuid
+        in: path
+        name: queue_id
+        required: true
+        type: string
+      - description: User token for identification
+        in: query
+        name: user_token
+        required: true
+        type: string
+      responses:
+        '200':
+          description: User position retrieved successfully
+          schema:
+            properties:
+              has_raised_hand:
+                description: Whether user has an active hand raise
+                type: boolean
+              position:
+                description: User's position in queue (1-based), null if not in queue
+                type: integer
+            type: object
+        '400':
+          description: Bad request (missing user_token)
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '404':
+          description: Queue not found
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+        '500':
+          description: Internal server error
+          schema:
+            properties:
+              error:
+                type: string
+            type: object
+      summary: Get the position of a user in the hand raise queue
+      tags:
+      - Hand Raises
   /api/queues/{queue_id}/user-token:
     post:
       parameters:

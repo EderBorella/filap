@@ -4,8 +4,7 @@
 .message-input {
   position: sticky;
   bottom: 0;
-  background: color(surface);
-  border-top: 1px solid color(gray-200);
+  background: #EFF6FF;
   padding: spacing(4);
   z-index: map-get($z-index, sticky);
   
@@ -51,9 +50,9 @@
     flex-direction: column;
     gap: spacing(3);
   }
-  
+
   &__textarea-container {
-    flex: 1;
+    width: 100%;
     position: relative;
   }
   
