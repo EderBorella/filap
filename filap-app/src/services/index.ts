@@ -8,4 +8,3 @@ export { StorageService } from './storageService';
 export type { CreateQueueRequest, QueueResponse, QueueMetadata, UpdateQueueRequest, UserTokenResponse } from './queueService';
 export type { MessageResponse, CreateMessageRequest, UpdateMessageRequest, MessagesListResponse, GetMessagesOptions } from './messageService';
 export type { SSEEvent, SSEEventHandler } from './realtimeService';
-export type { StoredQueueData } from './storageService';
