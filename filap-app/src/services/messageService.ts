@@ -1,6 +1,6 @@
 import { MessagesService, VotingService } from '../api';
 import type { CancelablePromise } from '../api';
-import { StorageService } from './StorageService';
+import { StorageService } from './storageService';
 
 export interface MessageResponse {
   id: string;
