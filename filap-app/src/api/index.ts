@@ -7,6 +7,7 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
+export { HandRaisesService } from './services/HandRaisesService';
 export { MessagesService } from './services/MessagesService';
 export { QueuesService } from './services/QueuesService';
 export { RealTimeEventsService } from './services/RealTimeEventsService';

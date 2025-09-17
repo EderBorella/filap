@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MessageService } from '../../services';
-import { StorageService } from '../../services';
 import MessageCard from '../MessageCard';
 import { useToast } from '../Toast';
 import type { SortOption } from '../QueueHeader';

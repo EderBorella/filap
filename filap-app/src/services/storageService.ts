@@ -7,6 +7,7 @@ export interface StoredQueueData {
   hostSecret?: string;
   userToken?: string;
   queueName?: string;
+  userName?: string;
   expiresAt: string;
 }
 
@@ -26,6 +27,7 @@ export class StorageService {
       hostSecret: data.hostSecret || existing?.hostSecret,
       userToken: data.userToken || existing?.userToken,
       queueName: data.queueName || existing?.queueName,
+      userName: data.userName || existing?.userName,
       expiresAt: data.expiresAt || existing?.expiresAt || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
     };
 
@@ -93,6 +95,21 @@ export class StorageService {
    */
   static setUserToken(queueId: string, userToken: string): void {
     this.storeQueueData(queueId, { userToken });
+  }
+
+  /**
+   * Get user name for a queue
+   */
+  static getUserName(queueId: string): string | null {
+    const data = this.getQueueData(queueId);
+    return data?.userName || null;
+  }
+
+  /**
+   * Set user name for a queue
+   */
+  static setUserName(queueId: string, userName: string): void {
+    this.storeQueueData(queueId, { userName });
   }
 
   /**

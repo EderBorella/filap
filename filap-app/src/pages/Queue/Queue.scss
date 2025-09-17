@@ -19,7 +19,16 @@
   // Header section
   &__header {
     margin-bottom: spacing(6);
-    
+
+    @include respond-to(sm) {
+      margin-bottom: spacing(4);
+    }
+  }
+
+  // Tab navigation section
+  &__tabs {
+    margin-bottom: spacing(6);
+
     @include respond-to(sm) {
       margin-bottom: spacing(4);
     }
@@ -44,33 +53,31 @@
     flex: 1;
     min-height: 0; // Allow flexbox to shrink
     overflow-y: auto;
-    
-    @include respond-to(sm) {
-      padding-bottom: spacing(20); // Add space for fixed input
-    }
+    // No padding-bottom needed since input is in normal document flow
+  }
+
+  // Hand raise list container
+  &__hand-raises {
+    flex: 1;
+    min-height: 0; // Allow flexbox to shrink
+    overflow-y: auto;
+    // No padding-bottom needed since input is in normal document flow
   }
   
   // Input area
   &__input {
     flex-shrink: 0;
-    background: color(surface);
+    background: #EFF6FF;
     border-radius: map-get($border-radius, medium);
     box-shadow: map-get($shadows, small);
     padding: spacing(4);
-    border: 1px solid color(gray-200);
-    
+    border: 1px solid #93C5FD;
+
     @include respond-to(sm) {
       padding: spacing(3);
-      border-radius: 0;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 10;
-      margin: 0;
-      border-left: none;
-      border-right: none;
-      border-bottom: none;
+      border-radius: map-get($border-radius, medium);
+      // Keep input in normal document flow instead of fixed positioning
+      // This ensures it appears below the list content naturally
     }
   }
   

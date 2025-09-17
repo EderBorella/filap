@@ -25,7 +25,7 @@ CORS(app,
 init_db(app)
 
 # Import models after db initialization
-from models.models import Base, Queue, Message, MessageUpvote
+from models.models import Base, Queue, Message, MessageUpvote, HandRaise
 
 # Configure Swagger/OpenAPI
 swagger_config = {
@@ -80,9 +80,11 @@ swagger = Swagger(app, config=swagger_config, template=swagger_template)
 from routes.events import events_bp
 from routes.queues import queues_bp
 from routes.messages import messages_bp
+from routes.hand_raises import hand_raises_bp
 app.register_blueprint(events_bp)
 app.register_blueprint(queues_bp)
 app.register_blueprint(messages_bp)
+app.register_blueprint(hand_raises_bp)
 
 @app.route("/")
 def hello():

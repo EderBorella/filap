@@ -7,6 +7,9 @@ import { useToast } from '../../components/Toast';
 import QueueHeader, { type SortOption } from '../../components/QueueHeader';
 import MessageList from '../../components/MessageList';
 import MessageInput from '../../components/MessageInput';
+import HandRaiseList from '../../components/HandRaiseList';
+import HandRaiseInput from '../../components/HandRaiseInput';
+import TabNavigation, { type TabKey } from '../../components/TabNavigation';
 import LanguageToggle from '../../components/LanguageToggle';
 import './Queue.scss';
 
@@ -24,6 +27,9 @@ const Queue: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [currentSort, setCurrentSort] = useState<SortOption>('votes');
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<TabKey>('questions');
+  const [messageCount, setMessageCount] = useState(0);
+  const [handRaiseCount, setHandRaiseCount] = useState(0);
   const { showError, showSuccess, showInfo } = useToast();
 
   // Fetch queue data
@@ -137,6 +143,21 @@ const Queue: React.FC = () => {
     console.log('Message submitted - SSE will update the list');
   }, []);
 
+  // Handle hand raise update callback
+  const handleHandRaiseUpdate = useCallback((data: any) => {
+    setHandRaiseCount(data.total_active || 0);
+  }, []);
+
+  // Handle message list update callback (for message count)
+  const handleMessageListUpdate = useCallback((messages: any[]) => {
+    setMessageCount(messages.length);
+  }, []);
+
+  // Handle tab change
+  const handleTabChange = useCallback((tab: TabKey) => {
+    setActiveTab(tab);
+  }, []);
+
   // Loading state
   if (loading) {
     return (
@@ -194,24 +215,55 @@ const Queue: React.FC = () => {
           />
         </div>
 
+        {/* Tab Navigation */}
+        <div className="queue-page__tabs">
+          <TabNavigation
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            questionCount={messageCount}
+            handRaiseCount={handRaiseCount}
+          />
+        </div>
+
         {/* Main Content */}
         <div className="queue-page__main">
-          {/* Message List */}
-          <div className="queue-page__messages">
-            <MessageList
-              queueId={queueId!}
-              currentSort={currentSort}
-              onQueueUpdate={handleQueueUpdate}
-            />
-          </div>
+          {activeTab === 'questions' ? (
+            <>
+              {/* Message List */}
+              <div className="queue-page__messages">
+                <MessageList
+                  queueId={queueId!}
+                  currentSort={currentSort}
+                  onQueueUpdate={handleQueueUpdate}
+                />
+              </div>
 
-          {/* Input Area */}
-          <div className="queue-page__input">
-            <MessageInput
-              queueId={queueId!}
-              onMessageSent={handleMessageSubmit}
-            />
-          </div>
+              {/* Message Input Area */}
+              <div className="queue-page__input">
+                <MessageInput
+                  queueId={queueId!}
+                  onMessageSent={handleMessageSubmit}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Hand Raise List */}
+              <div className="queue-page__hand-raises">
+                <HandRaiseList
+                  queueId={queueId!}
+                  onHandRaiseUpdate={handleHandRaiseUpdate}
+                />
+              </div>
+
+              {/* Hand Raise Input Area */}
+              <div className="queue-page__input">
+                <HandRaiseInput
+                  queueId={queueId!}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
 
