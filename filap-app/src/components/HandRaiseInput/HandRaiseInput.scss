@@ -1,14 +1,16 @@
 .hand-raise-input {
   padding: 1.5rem;
-  background: #FFFFFF;
+  background: #EFF6FF;
   border-radius: 12px;
-  border: 1px solid #E5E7EB;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   &__form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    width: 100%;
+    max-width: 768px;
+    margin: 0 auto;
   }
 
   &__field {
@@ -29,6 +31,7 @@
   }
 
   &__input {
+    width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid #D1D5DB;
     border-radius: 8px;

@@ -105,23 +105,17 @@ const HandRaiseInput: React.FC<HandRaiseInputProps> = ({ queueId }) => {
       <form onSubmit={handleRaiseHand} className="hand-raise-input__form">
         {!hasRaisedHand && (
           <div className="hand-raise-input__field">
-            <label htmlFor="userName" className="hand-raise-input__label">
-              {t('handRaise.yourName')} <span className="hand-raise-input__required">*</span>
-            </label>
             <input
               id="userName"
               type="text"
               value={userName}
               onChange={(e) => setUserName(e.target.value)}
-              placeholder={t('handRaise.namePlaceholder')}
+              placeholder={`${t('handRaise.yourName')} *`}
               className="hand-raise-input__input"
               maxLength={100}
               required
               disabled={isSubmitting}
             />
-            <div className="hand-raise-input__help">
-              {t('handRaise.nameHelp')}
-            </div>
           </div>
         )}
 

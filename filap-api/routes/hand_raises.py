@@ -293,22 +293,29 @@ def update_hand_raise(queue_id, hand_raise_id):
     try:
         host_secret = request.headers.get('X-Queue-Secret')
         if not host_secret:
+            print(f"DEBUG: Missing host secret for queue {queue_id}, hand raise {hand_raise_id}")
             return jsonify({'error': 'Host authentication required'}), 401
 
         data = request.get_json()
         if not data:
+            print(f"DEBUG: Missing request body for queue {queue_id}, hand raise {hand_raise_id}")
             return jsonify({'error': 'Request body is required'}), 400
 
+        print(f"DEBUG: Updating hand raise {hand_raise_id} in queue {queue_id} with data: {data}")
         hand_raise_data = HandRaiseService.update_hand_raise(queue_id, hand_raise_id, host_secret, data)
 
         if hand_raise_data is None:
+            print(f"DEBUG: Hand raise update returned None - unauthorized or not found")
             return jsonify({'error': 'Unauthorized or hand raise not found'}), 404
 
+        print(f"DEBUG: Hand raise update successful: {hand_raise_data}")
         return jsonify(hand_raise_data), 200
 
     except ValueError as e:
+        print(f"DEBUG: ValueError in update_hand_raise: {str(e)}")
         return jsonify({'error': str(e)}), 400
     except Exception as e:
+        print(f"DEBUG: Exception in update_hand_raise: {str(e)}")
         return jsonify({'error': 'Internal server error'}), 500
 
 @hand_raises_bp.route('/api/queues/<queue_id>/user-position', methods=['GET'])

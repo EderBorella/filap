@@ -65,7 +65,8 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
       eventSourceRef.current.close();
     }
 
-    const eventSource = new EventSource(`/api/queues/${queueId}/events`);
+    const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+    const eventSource = new EventSource(`${apiUrl}/api/queues/${queueId}/events`);
     eventSourceRef.current = eventSource;
 
     eventSource.onopen = () => {
@@ -73,46 +74,39 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
       console.log('SSE connected for hand raises');
     };
 
-    eventSource.onmessage = (event) => {
+    eventSource.onmessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        handleSSEEvent(data);
+        if (data.event === 'connected') {
+          setConnected(true);
+        }
       } catch (error) {
-        console.error('Error parsing SSE data:', error);
+        // Ignore non-JSON heartbeat messages
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error('SSE error:', error);
-      setConnected(false);
-
-      // Reconnect after 3 seconds
-      setTimeout(() => {
-        if (eventSourceRef.current?.readyState === EventSource.CLOSED) {
-          setupSSE();
-        }
-      }, 3000);
-    };
-  }, [queueId]);
-
-  // Handle SSE events
-  const handleSSEEvent = useCallback((data: any) => {
-    switch (data.event) {
-      case 'hand_raise_new':
+    // Add specific listeners for custom events
+    eventSource.addEventListener('hand_raise_new', (event: MessageEvent) => {
+      try {
+        const newHandRaise = JSON.parse(event.data);
         setHandRaises(prev => {
           const newData = {
             ...prev,
-            active_hand_raises: [...prev.active_hand_raises, data.data],
+            active_hand_raises: [...prev.active_hand_raises, newHandRaise],
             total_active: prev.total_active + 1
           };
           onHandRaiseUpdate?.(newData);
           return newData;
         });
-        break;
+      } catch (e) {
+        console.error("Failed to parse hand_raise_new event", e);
+      }
+    });
 
-      case 'hand_raise_updated':
+    eventSource.addEventListener('hand_raise_updated', (event: MessageEvent) => {
+      try {
+        const updatedHandRaise = JSON.parse(event.data);
         setHandRaises(prev => {
-          const updatedHandRaise = data.data;
           let newActive = [...prev.active_hand_raises];
           let newCompleted = [...prev.completed_hand_raises];
 
@@ -141,23 +135,43 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
           onHandRaiseUpdate?.(newData);
           return newData;
         });
-        break;
+      } catch (e) {
+        console.error("Failed to parse hand_raise_updated event", e);
+      }
+    });
 
-      case 'hand_raise_removed':
+    eventSource.addEventListener('hand_raise_removed', (event: MessageEvent) => {
+      try {
+        const { id: removedId } = JSON.parse(event.data);
         setHandRaises(prev => {
           const newData = {
             ...prev,
-            active_hand_raises: prev.active_hand_raises.filter(hr => hr.id !== data.data.id),
-            completed_hand_raises: prev.completed_hand_raises.filter(hr => hr.id !== data.data.id),
-            total_active: prev.active_hand_raises.filter(hr => hr.id !== data.data.id).length,
-            total_completed: prev.completed_hand_raises.filter(hr => hr.id !== data.data.id).length
+            active_hand_raises: prev.active_hand_raises.filter(hr => hr.id !== removedId),
+            completed_hand_raises: prev.completed_hand_raises.filter(hr => hr.id !== removedId),
+            total_active: prev.active_hand_raises.filter(hr => hr.id !== removedId).length,
+            total_completed: prev.completed_hand_raises.filter(hr => hr.id !== removedId).length
           };
           onHandRaiseUpdate?.(newData);
           return newData;
         });
-        break;
-    }
-  }, [onHandRaiseUpdate]);
+      } catch (e) {
+        console.error("Failed to parse hand_raise_removed event", e);
+      }
+    });
+
+    eventSource.onerror = (error) => {
+      console.error('SSE error:', error);
+      setConnected(false);
+
+      // Reconnect after 3 seconds
+      setTimeout(() => {
+        if (eventSourceRef.current?.readyState === EventSource.CLOSED) {
+          setupSSE();
+        }
+      }, 3000);
+    };
+  }, [queueId]);
+
 
   // Mark hand raise as completed (host only)
   const markAsCompleted = useCallback(async (handRaiseId: string) => {

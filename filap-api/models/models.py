@@ -94,7 +94,7 @@ class HandRaise(Base):
 
     # Constraints and Indexes
     __table_args__ = (
-        UniqueConstraint('queue_id', 'user_token', 'completed', name='uq_queue_user_active'),
+        # For SQLite compatibility, we'll handle the unique constraint in application logic
         Index('idx_queue_completed_raised', 'queue_id', 'completed', 'raised_at'),
         Index('idx_queue_id_handraise', 'queue_id'),
         Index('idx_user_token_handraise', 'user_token'),
