@@ -133,16 +133,35 @@
     }
   }
   
+  &__status-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: spacing(3);
+    flex-wrap: wrap;
+
+    @include respond-to(sm) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__connection-status {
+    margin-bottom: 0; // Override default margin from the component
+    flex-shrink: 0;
+  }
+
   &__expiry {
     font-size: map-get($font-sizes, small);
     color: color(text-secondary);
     font-weight: map-get($font-weights, medium);
     transition: color map-get($transitions, fast);
-    
+    text-align: right;
+    flex-shrink: 0;
+
     &--warning {
       color: #F59E0B; // Amber warning color
       animation: pulse 2s infinite;
-      
+
       @keyframes pulse {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.7; }
@@ -153,14 +172,40 @@
   // Host Control Bar
   &__controls {
     @include flex-between;
-    align-items: center;
+    align-items: flex-start;
     padding-top: spacing(4);
     border-top: 1px solid color(gray-200);
     gap: spacing(4);
     flex-wrap: wrap;
-    
-    @include respond-to(sm) {
+
+    @include respond-to(lg) {
       flex-wrap: nowrap;
+      align-items: center;
+    }
+  }
+
+  &__host-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: spacing(4);
+    flex-wrap: wrap;
+    flex: 1;
+
+    @include respond-to(lg) {
+      flex-wrap: nowrap;
+    }
+  }
+
+  &__timer-section {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 1023px) {
+      width: 100%;
+      margin-top: spacing(3);
+      order: 3;
     }
   }
   

@@ -38,7 +38,6 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
     total_completed: 0
   });
   const [loading, setLoading] = useState(true);
-  const [connected, setConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const { showError } = useToast();
 
@@ -70,16 +69,13 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
     eventSourceRef.current = eventSource;
 
     eventSource.onopen = () => {
-      setConnected(true);
       console.log('SSE connected for hand raises');
     };
 
     eventSource.onmessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.event === 'connected') {
-          setConnected(true);
-        }
+        // Handle connected event if needed
       } catch (error) {
         // Ignore non-JSON heartbeat messages
       }
@@ -161,7 +157,6 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
 
     eventSource.onerror = (error) => {
       console.error('SSE error:', error);
-      setConnected(false);
 
       // Reconnect after 3 seconds
       setTimeout(() => {
@@ -222,13 +217,6 @@ const HandRaiseList: React.FC<HandRaiseListProps> = ({
 
   return (
     <div className="hand-raise-list">
-      {/* Connection status */}
-      <div className={`hand-raise-list__status ${connected ? 'hand-raise-list__status--connected' : 'hand-raise-list__status--disconnected'}`}>
-        <span className="hand-raise-list__status-indicator" />
-        <span className="hand-raise-list__status-text">
-          {connected ? t('handRaise.connected') : t('handRaise.connecting')}
-        </span>
-      </div>
 
       {/* Active hand raises */}
       <div className="hand-raise-list__section">
