@@ -53,7 +53,11 @@
     flex: 1;
     min-height: 0; // Allow flexbox to shrink
     overflow-y: auto;
-    // No padding-bottom needed since input is in normal document flow
+
+    // Add padding bottom on desktop to prevent content from being hidden behind floating button
+    @include respond-to(lg) {
+      padding-bottom: 5rem;
+    }
   }
 
   // Hand raise list container
@@ -61,10 +65,19 @@
     flex: 1;
     min-height: 0; // Allow flexbox to shrink
     overflow-y: auto;
-    // No padding-bottom needed since input is in normal document flow
+
+    // Add padding bottom on desktop to prevent content from being hidden behind floating button
+    @include respond-to(lg) {
+      padding-bottom: 5rem;
+    }
   }
-  
-  // Input area
+
+  // Floating input wrapper
+  &__floating-input {
+    // Custom styles can be added here if needed for specific positioning
+  }
+
+  // Legacy input area (kept for mobile fallback if needed)
   &__input {
     flex-shrink: 0;
     background: #EFF6FF;
@@ -72,6 +85,11 @@
     box-shadow: map-get($shadows, small);
     padding: spacing(4);
     border: 1px solid #93C5FD;
+
+    // Hide on desktop since we're using floating inputs
+    @include respond-to(lg) {
+      display: none;
+    }
 
     @include respond-to(sm) {
       padding: spacing(3);

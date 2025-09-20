@@ -49,6 +49,21 @@ const MessageInput: React.FC<MessageInputProps> = ({
     adjustTextareaHeight();
   }, [message]);
 
+  // Load saved name from localStorage
+  useEffect(() => {
+    const savedName = StorageService.getUserName(queueId);
+    if (savedName) {
+      setAuthorName(savedName);
+    }
+  }, [queueId]);
+
+  // Save name to localStorage when it changes
+  useEffect(() => {
+    if (authorName.trim()) {
+      StorageService.setUserName(queueId, authorName.trim());
+    }
+  }, [queueId, authorName]);
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>): void => {
     setMessage(e.target.value);
   };

@@ -1,0 +1,327 @@
+@import '../../styles/variables';
+@import '../../styles/mixins';
+
+.speaking-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: color(surface);
+  border: 1px solid color(gray-200);
+  border-radius: map-get($border-radius, medium);
+  min-width: 280px;
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__left-control {
+    flex-shrink: 0;
+  }
+
+  &__right-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  &__display {
+    flex: 1;
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: map-get($border-radius, small);
+    background: color(gray-50);
+    border: 2px solid color(gray-200);
+    transition: all 0.3s ease;
+    min-width: 0; // Allow flexbox to shrink
+
+    &--warning {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: #F59E0B;
+      color: #92400E;
+    }
+
+    &--expired {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: #EF4444;
+      color: #991B1B;
+      animation: pulse 1s infinite;
+    }
+  }
+
+  &__time {
+    font-size: 1.25rem;
+    font-weight: map-get($font-weights, bold);
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+
+  &__progress {
+    width: 100%;
+    height: 4px;
+    background: color(gray-200);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #10B981 0%, #F59E0B 70%, #EF4444 100%);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: color(surface);
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:hover:not(:disabled) {
+      transform: scale(1.05);
+    }
+
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+
+    &--start {
+      background: #10B981; // Green
+
+      &:hover:not(:disabled) {
+        background: #059669;
+      }
+    }
+
+    &--pause {
+      background: #F59E0B; // Orange
+
+      &:hover:not(:disabled) {
+        background: #D97706;
+      }
+    }
+
+    &--reset {
+      background: #6B7280; // Gray
+
+      &:hover:not(:disabled) {
+        background: #4B5563;
+      }
+    }
+
+    &--settings {
+      background: color(primary);
+
+      &:hover:not(:disabled) {
+        background: color(primary-hover);
+      }
+    }
+  }
+
+  // Modal backdrop
+  &__modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.2s ease-out;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  }
+
+  // Modal container
+  &__modal {
+    background: color(surface);
+    border-radius: map-get($border-radius, medium);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    max-width: 400px;
+    max-height: 90vh;
+    overflow: hidden;
+    animation: slideInScale 0.2s ease-out;
+
+    @keyframes slideInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+  }
+
+  &__modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid color(gray-200);
+  }
+
+  &__modal-title {
+    font-size: map-get($font-sizes, h4);
+    font-weight: map-get($font-weights, semibold);
+    color: color(primary);
+    margin: 0;
+  }
+
+  &__modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: map-get($border-radius, small);
+    color: color(text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color(gray-100);
+      color: color(text-primary);
+    }
+
+    &:focus {
+      outline: 2px solid color(primary);
+      outline-offset: 2px;
+    }
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__modal-body {
+    padding: 1.5rem;
+  }
+
+  &__presets {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  &__preset {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid color(gray-200);
+    background: color(gray-50);
+    color: color(text-primary);
+    border-radius: map-get($border-radius, small);
+    font-size: map-get($font-sizes, small);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: color(gray-100);
+      border-color: color(primary);
+    }
+
+    &--active {
+      background: color(primary);
+      color: color(surface);
+      border-color: color(primary);
+
+      &:hover {
+        background: color(primary-hover);
+      }
+    }
+  }
+
+  // Responsive adjustments
+  @include respond-to(sm) {
+    min-width: auto;
+    width: 100%;
+
+    &__controls {
+      justify-content: space-around;
+    }
+
+    &__presets {
+      gap: 0.25rem;
+    }
+
+    &__preset {
+      padding: 0.4rem 0.6rem;
+      font-size: map-get($font-sizes, xs);
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .speaking-timer {
+    &__display {
+      transition: none;
+
+      &--expired {
+        animation: none;
+      }
+    }
+
+    &__progress-bar {
+      transition: none;
+    }
+
+    &__btn {
+      transition: none;
+
+      &:hover:not(:disabled) {
+        transform: none;
+      }
+    }
+
+  }
+}
