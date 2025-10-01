@@ -1,0 +1,81 @@
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+
+  &__indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+  }
+
+  &__text {
+    transition: color 0.3s ease;
+  }
+
+  &--connected {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+
+    .connection-status__indicator {
+      background-color: #22c55e;
+    }
+
+    &.connection-status .connection-status__text {
+      color: #005733;
+    }
+  }
+
+  &--disconnected {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+
+    .connection-status__indicator {
+      background-color: #ef4444;
+      animation: pulse 2s infinite;
+    }
+
+    &.connection-status .connection-status__text {
+      color: #991b1b;
+    }
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .connection-status {
+    &--connected {
+      background-color: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.3);
+
+      .connection-status .connection-status__text {
+        color: #86efac;
+      }
+    }
+
+    &--disconnected {
+      background-color: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+
+      .connection-status .connection-status__text {
+        color: #fca5a5;
+      }
+    }
+  }
+}

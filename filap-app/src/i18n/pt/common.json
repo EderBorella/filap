@@ -46,7 +46,8 @@
     "showNameField": "Mostrar campo do nome",
     "send": "Enviar",
     "sending": "Enviando...",
-    "helpText": "Pressione Ctrl+Enter para enviar rapidamente"
+    "helpText": "Pressione Ctrl+Enter para enviar rapidamente",
+    "askQuestion": "Fazer Pergunta"
   },
   "handRaise": {
     "loading": "Carregando mãos levantadas...",
@@ -102,6 +103,14 @@
       "note": "Este formulário abrirá seu cliente de email padrão com a mensagem pré-preenchida. Se não funcionar, sinta-se à vontade para me enviar um email diretamente em",
       "emailLink": "ederlopesborella@gmail.com"
     }
+  },
+  "timer": {
+    "start": "Iniciar Timer",
+    "pause": "Pausar Timer",
+    "reset": "Resetar Timer",
+    "settings": "Configurações do Timer",
+    "setTime": "Definir Tempo de Fala",
+    "minutes": "min"
   },
   "footer": {
     "copyright": "© {{year}} Eder Borella"

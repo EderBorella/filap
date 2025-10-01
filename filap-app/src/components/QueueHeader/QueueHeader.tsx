@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StorageService } from '../../services';
 import { useToast } from '../Toast';
+import ConnectionStatusIndicator from '../ConnectionStatusIndicator';
+import SpeakingTimer from '../SpeakingTimer';
 import './QueueHeader.scss';
 
 export type SortOption = 'votes' | 'newest';
@@ -155,39 +157,55 @@ const QueueHeader: React.FC<QueueHeaderProps> = ({
           )}
         </div>
 
-        {/* Expiry Countdown */}
-        <div className={`queue-header__expiry ${isExpiringSoon ? 'queue-header__expiry--warning' : ''}`}>
-          {t('queue.expiresIn', { time: timeRemaining })}
+        {/* Status Row - Connection Status and Expiry Countdown */}
+        <div className="queue-header__status-row">
+          {/* Connection Status */}
+          <ConnectionStatusIndicator
+            queueId={queueId}
+            className="queue-header__connection-status"
+          />
+
+          {/* Expiry Countdown */}
+          <div className={`queue-header__expiry ${isExpiringSoon ? 'queue-header__expiry--warning' : ''}`}>
+            {t('queue.expiresIn', { time: timeRemaining })}
+          </div>
         </div>
       </div>
 
       {/* Host Control Bar - Only shown for hosts */}
       {isHost && (
         <div className="queue-header__controls">
-          <div className="queue-header__host-badge">
-            <span className="queue-header__badge-icon">👑</span>
-            {t('queue.hostMode')}
-          </div>
+          <div className="queue-header__host-section">
+            <div className="queue-header__host-badge">
+              <span className="queue-header__badge-icon">👑</span>
+              {t('queue.hostMode')}
+            </div>
 
-          <div className="queue-header__sort-toggles">
-            <span className="queue-header__sort-label">{t('queue.sortBy')}</span>
-            
-            <div className="queue-header__toggle-group">
-              <button
-                className={`queue-header__toggle ${currentSort === 'votes' ? 'queue-header__toggle--active' : ''}`}
-                onClick={() => handleSortChange('votes')}
-                type="button"
-              >
-                {t('queue.mostVotes')}
-              </button>
-              
-              <button
-                className={`queue-header__toggle ${currentSort === 'newest' ? 'queue-header__toggle--active' : ''}`}
-                onClick={() => handleSortChange('newest')}
-                type="button"
-              >
-                {t('queue.newest')}
-              </button>
+            {/* Speaking Timer */}
+            <div className="queue-header__timer-section">
+              <SpeakingTimer className="queue-header__timer" />
+            </div>
+
+            <div className="queue-header__sort-toggles">
+              <span className="queue-header__sort-label">{t('queue.sortBy')}</span>
+
+              <div className="queue-header__toggle-group">
+                <button
+                  className={`queue-header__toggle ${currentSort === 'votes' ? 'queue-header__toggle--active' : ''}`}
+                  onClick={() => handleSortChange('votes')}
+                  type="button"
+                >
+                  {t('queue.mostVotes')}
+                </button>
+
+                <button
+                  className={`queue-header__toggle ${currentSort === 'newest' ? 'queue-header__toggle--active' : ''}`}
+                  onClick={() => handleSortChange('newest')}
+                  type="button"
+                >
+                  {t('queue.newest')}
+                </button>
+              </div>
             </div>
           </div>
         </div>

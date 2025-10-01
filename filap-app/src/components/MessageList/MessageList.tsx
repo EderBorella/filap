@@ -35,7 +35,6 @@ const MessageList: React.FC<MessageListProps> = ({
   const { t } = useTranslation();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
-  const [connected, setConnected] = useState(false);
   const eventSourceRef = useRef<EventSource | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,15 +157,12 @@ const MessageList: React.FC<MessageListProps> = ({
     
     eventSource.onopen = () => {
       console.log('SSE connection opened');
-      setConnected(true);
     };
 
     eventSource.onmessage = (event: MessageEvent) => {
       try {
         const data = JSON.parse(event.data);
-        if (data.event === 'connected') {
-          setConnected(true);
-        }
+        // Handle connected event if needed
       } catch (error) {
         // Ignore non-JSON heartbeat messages
       }
@@ -180,8 +176,7 @@ const MessageList: React.FC<MessageListProps> = ({
 
     eventSource.onerror = (error) => {
       console.error('SSE connection error:', error);
-      setConnected(false);
-      
+
       // Attempt to reconnect after 3 seconds
       setTimeout(() => {
         console.log('Attempting to reconnect SSE...');
@@ -238,13 +233,6 @@ const MessageList: React.FC<MessageListProps> = ({
 
   return (
     <div className="message-list" ref={containerRef}>
-      {/* Connection Status Indicator */}
-      <div className={`message-list__status ${connected ? 'message-list__status--connected' : 'message-list__status--disconnected'}`}>
-        <div className="message-list__status-indicator" />
-        <span className="message-list__status-text">
-          {connected ? t('queue.liveUpdatesActive') : t('queue.reconnecting')}
-        </span>
-      </div>
 
       {/* Messages */}
       {messages.length === 0 ? (
