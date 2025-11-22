@@ -1,5 +1,5 @@
 # Multi-stage build for optimal image size
-FROM node:22.12-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -8,11 +8,13 @@ WORKDIR /app
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-# Copy source code
-COPY . .
+COPY package.json package-lock.json* ./
 
 # Install dependencies (including devDependencies for build)
 RUN npm ci
+
+# Then copy the rest of the source code
+COPY . .
 
 # Build the application with environment variable available
 RUN npm run build
