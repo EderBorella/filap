@@ -4,14 +4,14 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files first (better caching)
-COPY package*.json ./
+# Copy package files from the filap-app subdirectory
+COPY filap-app/package*.json ./
 
 # Install dependencies
 RUN npm ci
 
-# Copy source code
-COPY . .
+# Copy the rest of the filap-app source code
+COPY filap-app/ ./
 
 # Accept build argument
 ARG VITE_API_BASE_URL
