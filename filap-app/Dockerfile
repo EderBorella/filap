@@ -8,14 +8,11 @@ WORKDIR /app
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-# Copy package files
-COPY package.json package-lock.json ./
+# Copy source code
+COPY . .
 
 # Install dependencies (including devDependencies for build)
 RUN npm ci
-
-# Copy source code
-COPY . .
 
 # Build the application with environment variable available
 RUN npm run build
