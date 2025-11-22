@@ -4,13 +4,17 @@ FROM node:20-alpine AS builder
 # Set working directory
 WORKDIR /app
 
-# Copy package files from current directory (filap-app)
+# Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies with enhanced error handling
+RUN npm ci --verbose || {
+    echo "npm ci failed, trying alternative approaches...";
+    npm cache clean --force && \
+    npm install --no-package-lock --verbose;
+}
 
-# Copy the rest of the source code from current directory
+# Copy source code
 COPY . .
 
 # Accept build argument
